@@ -10,7 +10,7 @@ A list of all airport code and the city name
 A list of cities provided by Dan
 
 ### crawled_flight_history.data.bz2
-Price history of 156378 pair of airports and their price history for the past year
+Price history of 156378 pair of airports and their price history over the last year
 Data are delimited by "\t" and each line contains 4 fields: 
 1. Destination airport
 2. Source airport

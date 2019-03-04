@@ -1,4 +1,4 @@
-# Flight price history crawler
+# Flight price history scrapper
 Python code for crawling price history from faredetective https://www.faredetective.com/ and crawled data
 
 

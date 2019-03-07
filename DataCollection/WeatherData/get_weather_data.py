@@ -28,6 +28,44 @@ stations.dropna(axis=0, inplace=True)
 # Build the coordinates for the stations
 stations['coordinates'] = stations.apply(lambda x: np.array([x.lat, x.lon]), axis=1)
 
+# Get representative weather for the past 5 years for all stations
+# Get the monthly weather over the past 5 years for all stations
+weather_query = ("""
+SELECT stn, wban, mo as month, AVG(temp) as avg_temp, AVG(prcp) as avg_prcp, SUM(CAST(fog AS int64)) as foggy_days, SUM(CAST(rain_drizzle as int64)) as rainy_days, SUM(CAST(snow_ice_pellets as int64)) as snow_days, SUM(CAST(thunder as int64)) as stormy_days
+FROM
+(SELECT
+  *
+FROM 
+ `bigquery-public-data.noaa_gsod.gsod2018`
+UNION ALL
+SELECT
+  *
+FROM 
+ `bigquery-public-data.noaa_gsod.gsod2017`
+UNION ALL
+SELECT
+  *
+FROM 
+ `bigquery-public-data.noaa_gsod.gsod2016`
+UNION ALL
+SELECT
+  *
+FROM 
+ `bigquery-public-data.noaa_gsod.gsod2015`
+UNION ALL
+SELECT
+  *
+FROM 
+ `bigquery-public-data.noaa_gsod.gsod2014`) a
+ GROUP BY 1,2,3""")
+
+weather = pandas_gbq.read_gbq(weather_query,
+                               project_id="dva-destination-recommender",
+                               credentials=credentials, dialect='standard')
+
+# Only keep stations for which we have weather info
+stations_with_weather = weather.merge(stations, how='inner', left_on=['stn', 'wban'], right_on=['usaf', 'wban'])
+
 # A function to find the closest station for given coordinates
 def find_closest_station(city_coord, stations):
     """
@@ -47,15 +85,22 @@ def find_closest_station(city_coord, stations):
 
     return ids
 
-# Find the closest station for each city in the cities dataframe
+# Find the closest station with weather for each city in the dataframe
 closest_stations = []
 for row_num in range(len(cities)):
     city_coord = cities.iloc[row_num].coordinates
-    closest_stations.append(find_closest_station(city_coord, stations))
+    closest_stations.append(find_closest_station(city_coord, stations_with_weather))
 
 # Need both usaf and wban to uniquely identify stations
 cities['closest_station'] = closest_stations
 cities[['closest_station_usaf', 'closest_station_wban']] = cities['closest_station'].str.split('|', expand=True)
 
-# For each city, get over the past 5 years the average monthly temperature and precipitation
-print(cities.head())
+# Append weather information to the cities
+city_monthly_weather = cities.merge(stations_with_weather,
+                                    how='left',
+                                    left_on=['closest_station_wban', 'closest_station_usaf'],
+                                    right_on=['wban', 'stn'])
+
+# Store in the sqlite DB
+city_monthly_weather.to_sql('city_weather', conn)
+conn.close()

@@ -11,7 +11,7 @@ conn = sqlite3.connect('../cityDB.sqlite')
 cities = pd.read_sql_query("SELECT cid, city, state, lat, lng  FROM cities;", conn)
 
 # Get the coordinates for the cities
-cities['coordinates'] = zip(cities.lat, cities.lng)
+cities['coordinates'] = cities.apply(lambda x: (x['lat'], x['lng']), axis=1)
 
 # Get a list of all the stations in the US from NOAA data publicly available on BigQuery
 credentials = service_account.Credentials.from_service_account_file('bigquery_key.json')
@@ -22,9 +22,13 @@ stations = pandas_gbq.read_gbq(stations_query,
                                project_id="dva-destination-recommender",
                                credentials=credentials, dialect='standard')
 
-# Get the coordinates for the stations
-stations['coordinates'] = np.array(zip(stations.lat, stations.lon))
+# Remove stations with null values
+stations.dropna(axis=0, inplace=True)
 
+# Build the coordinates for the stations
+stations['coordinates'] = stations.apply(lambda x: np.array([x.lat, x.lon]), axis=1)
+
+# A function to find the closest station for given coordinates
 def find_closest_station(city_coord, stations):
     """
     INPUTS:
@@ -34,8 +38,7 @@ def find_closest_station(city_coord, stations):
     OUTPUT:
     ids (int): the station ID for the closest station to the city, both usaf and wban
     """
-    stations_coord = stations['coordinates'].values
-    print(stations.coordinates.iloc[0])
+    stations_coord = np.array(stations['coordinates'].tolist())
     closest_index = distance.cdist([city_coord], stations_coord).argmin()
     usaf = stations.iloc[closest_index, 0]
     wban = stations.iloc[closest_index, 1]
@@ -44,25 +47,15 @@ def find_closest_station(city_coord, stations):
 
     return ids
 
-print(find_closest_station((34.78, -76.85), stations))
+# Find the closest station for each city in the cities dataframe
+closest_stations = []
+for row_num in range(len(cities)):
+    city_coord = cities.iloc[row_num].coordinates
+    closest_stations.append(find_closest_station(city_coord, stations))
 
-client = bigquery.Client.from_service_account_json('bigquery_key.json')
-query = (
-    "SELECT name FROM `bigquery-public-data.usa_names.usa_1910_2013` "
-    'WHERE state = "TX" '
-    "LIMIT 100"
-)
-# query_job = client.query(
-#     query,
-#     # Location must match that of the dataset(s) referenced in the query.
-#     location="US",
-# )  # API request - starts the query
-#
-# for row in query_job:  # API request - fetches results
-#     # Row values can be accessed by field name or index
-#     assert row[0] == row.name == row["name"]
-#     print(row)
+# Need both usaf and wban to uniquely identify stations
+cities['closest_station'] = closest_stations
+cities[['closest_station_usaf', 'closest_station_wban']] = cities['closest_station'].str.split('|', expand=True)
 
-
-
-# Limited to 1000 calls per day. With 4000 cities, last year, 1 call per week: 52 * 4000
+# For each city, get over the past 5 years the average monthly temperature and precipitation
+print(cities.head())

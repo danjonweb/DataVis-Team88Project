@@ -31,7 +31,9 @@ stations['coordinates'] = stations.apply(lambda x: np.array([x.lat, x.lon]), axi
 # Get representative weather for the past 5 years for all stations
 # Get the monthly weather over the past 5 years for all stations
 weather_query = ("""
-SELECT stn, wban, mo as month, AVG(temp) as avg_temp, AVG(prcp) as avg_prcp, SUM(CAST(fog AS int64)) as foggy_days, SUM(CAST(rain_drizzle as int64)) as rainy_days, SUM(CAST(snow_ice_pellets as int64)) as snow_days, SUM(CAST(thunder as int64)) as stormy_days
+SELECT stn, wban, mo as month, AVG(temp) as avg_temp, AVG(prcp) as avg_prcp, SUM(CAST(fog AS int64))/5 as avg_nb_foggy_days, 
+SUM(CAST(rain_drizzle as int64))/5 as avg_nb_rainy_days, 
+SUM(CAST(snow_ice_pellets as int64))/5 as avg_nb_snow_days, SUM(CAST(thunder as int64))/5 as avg_nb_stormy_days
 FROM
 (SELECT
   *
@@ -101,6 +103,14 @@ city_monthly_weather = cities.merge(stations_with_weather,
                                     left_on=['closest_station_wban', 'closest_station_usaf'],
                                     right_on=['wban', 'stn'])
 
+# Drop unecessary columns and columns with unsupported types in sqlite
+city_monthly_weather.drop(labels=['usaf', 'name', 'country', 'state_y', 'coordinates_x',
+                                 'call', 'lat_y', 'lon', 'elev', 'begin', 'end', 'coordinates_y', 'stn', 'wban'],
+                          inplace=True, axis=1)
+
+# Rename columns
+city_monthly_weather.rename(axis=1, mapper={'state_x': 'state', 'lat_x': 'lat', 'lng': 'lon'}, inplace=True)
+
 # Store in the sqlite DB
-city_monthly_weather.to_sql('city_weather', conn)
+city_monthly_weather.to_sql('city_weather', conn, if_exists='replace')
 conn.close()

@@ -83,7 +83,7 @@ def find_closest_station(city_coord, stations):
     usaf = stations.iloc[closest_index, 0]
     wban = stations.iloc[closest_index, 1]
 
-    ids = str(usaf) + '|' + str(wban)
+    ids = str(usaf) + '/' + str(wban)
 
     return ids
 
@@ -95,7 +95,7 @@ for row_num in range(len(cities)):
 
 # Need both usaf and wban to uniquely identify stations
 cities['closest_station'] = closest_stations
-cities[['closest_station_usaf', 'closest_station_wban']] = cities['closest_station'].str.split('|', expand=True)
+cities[['closest_station_usaf', 'closest_station_wban']] = cities['closest_station'].str.split('/', expand=True)
 
 # Append weather information to the cities
 city_monthly_weather = cities.merge(stations_with_weather,

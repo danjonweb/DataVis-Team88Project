@@ -105,12 +105,13 @@ city_monthly_weather = cities.merge(stations_with_weather,
 
 # Drop unecessary columns and columns with unsupported types in sqlite
 city_monthly_weather.drop(labels=['usaf', 'name', 'country', 'state_y', 'coordinates_x',
-                                 'call', 'lat_y', 'lon', 'elev', 'begin', 'end', 'coordinates_y', 'stn', 'wban'],
+                                 'call', 'lat_y', 'lon', 'elev', 'begin', 'end', 'coordinates_y',
+                                  'stn', 'wban', 'closest_station'],
                           inplace=True, axis=1)
 
 # Rename columns
 city_monthly_weather.rename(axis=1, mapper={'state_x': 'state', 'lat_x': 'lat', 'lng': 'lon'}, inplace=True)
 
 # Store in the sqlite DB
-city_monthly_weather.to_sql('city_weather', conn, if_exists='replace')
+city_monthly_weather.to_sql('city_weather', conn, if_exists='replace', index=False)
 conn.close()

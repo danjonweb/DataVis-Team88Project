@@ -32,8 +32,8 @@ stations['coordinates'] = stations.apply(lambda x: np.array([x.lat, x.lon]), axi
 # Get the monthly weather over the past 5 years for all stations
 weather_query = ("""
 SELECT stn, wban, mo as month, AVG(temp) as avg_temp, AVG(prcp) as avg_prcp, SUM(CAST(fog AS int64))/5 as avg_nb_foggy_days, 
-SUM(CAST(rain_drizzle as int64))/5 as avg_nb_rainy_days, 
-SUM(CAST(snow_ice_pellets as int64))/5 as avg_nb_snow_days, SUM(CAST(thunder as int64))/5 as avg_nb_stormy_days
+SUM(CAST(rain_drizzle as int64))/5 as avg_nb_precep_days, 
+SUM(CAST(snow_ice_pellets as int64))/5 as avg_nb_hail_days, SUM(CAST(thunder as int64))/5 as avg_nb_stormy_days
 FROM
 (SELECT
   *

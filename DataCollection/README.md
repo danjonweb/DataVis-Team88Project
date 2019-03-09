@@ -1,6 +1,16 @@
 # DataVis-Team88Project: Data Collection
 This repo contains all data gather and cleaning scripts
 
+## Necessary Libraries
+In order to run all the scripts included in this repository, the following libraries need
+to be installed:
+* sqlite3
+* pandas
+* google.oauth2
+* pandas-gbq
+* scipy
+* numpy
+
 ## WeatherData
 
 This folder gathers the script necessary to acquire weather data for all cities included

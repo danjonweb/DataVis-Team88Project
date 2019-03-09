@@ -1,6 +1,5 @@
 import sqlite3
 import pandas as pd
-from google.cloud import bigquery
 from google.oauth2 import service_account
 import pandas_gbq
 from scipy.spatial import distance

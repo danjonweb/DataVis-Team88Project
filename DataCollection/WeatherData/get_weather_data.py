@@ -4,6 +4,7 @@ from google.oauth2 import service_account
 import pandas_gbq
 from scipy.spatial import distance
 import numpy as np
+import mpu
 
 # Get a dataframe of all the cities at hand, along with their latitude and longitude
 conn = sqlite3.connect('../cityDB.sqlite')
@@ -25,7 +26,7 @@ stations = pandas_gbq.read_gbq(stations_query,
 stations.dropna(axis=0, inplace=True)
 
 # Build the coordinates for the stations
-stations['coordinates'] = stations.apply(lambda x: np.array([x.lat, x.lon]), axis=1)
+stations['coordinates'] = stations.apply(lambda x: (x.lat, x.lon), axis=1)
 
 # Get representative weather for the past 5 years for all stations
 # Get the monthly weather over the past 5 years for all stations
@@ -77,12 +78,18 @@ def find_closest_station(city_coord, stations):
     OUTPUT:
     ids (int): the station ID for the closest station to the city, both usaf and wban
     """
-    stations_coord = np.array(stations['coordinates'].tolist())
-    closest_index = distance.cdist([city_coord], stations_coord).argmin()
-    usaf = stations.iloc[closest_index, 0]
-    wban = stations.iloc[closest_index, 1]
+    # Initialize a dictionary to hold the distance with each station coordinates
+    station_dict = {}
 
-    ids = str(usaf) + '/' + str(wban)
+    for station in stations['coordinates'].unique().tolist():
+        station_dict[station] = mpu.haversine_distance(city_coord, station)
+
+    closest_station = sorted(station_dict.items(), key=lambda x: x[1])[0][0]
+
+    usaf = stations.loc[stations['coordinates'] == closest_station, 'usaf']
+    wban = stations.loc[stations['coordinates'] == closest_station, 'wban']
+
+    ids = str(usaf) + '|' + str(wban)
 
     return ids
 

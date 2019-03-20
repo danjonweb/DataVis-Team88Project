@@ -10,6 +10,7 @@ to be installed:
 * pandas-gbq
 * scipy
 * numpy
+* mpu
 
 ## WeatherData
 

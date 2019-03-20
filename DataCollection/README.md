@@ -47,6 +47,11 @@ downlaoded from https://openflights.org/data.html
 
 The Python scrit `closest_airports.py` creates a new table
 in the database which stores the 3 closest airports for any city. We choose
-?? as the maximum radius in which to look for an airport, as it is the maximum
+60km as the maximum radius in which to look for an airport, as it is the maximum
 distance between any city in our database and the airports for which we have price information.
 This ensures every city will have at least one airport associated with them.
+
+Some caveats:
+* out of the 394 airports for which we have price information, only 370 have information available
+* some airports are closed
+* some cities do not have 3 airports within the radius, so NULL in the table

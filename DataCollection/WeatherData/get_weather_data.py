@@ -110,7 +110,7 @@ city_monthly_weather = cities.merge(stations_with_weather,
                                     left_on=['closest_station_wban', 'closest_station_usaf'],
                                     right_on=['wban', 'stn'])
 
-# Drop unecessary columns and columns with unsupported types in sqlite
+# Drop unnecessary columns and columns with unsupported types in sqlite
 city_monthly_weather.drop(labels=['usaf', 'name', 'country', 'state_y', 'coordinates_x',
                                  'call', 'lat_y', 'lon', 'elev', 'begin', 'end', 'coordinates_y',
                                   'stn', 'wban', 'closest_station'],

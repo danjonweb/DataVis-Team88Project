@@ -81,15 +81,16 @@ def find_closest_station(city_coord, stations):
     # Initialize a dictionary to hold the distance with each station coordinates
     station_dict = {}
 
+    # Iterate through the stations and find the distance with the considered city
     for station in stations['coordinates'].unique().tolist():
         station_dict[station] = mpu.haversine_distance(city_coord, station)
 
+    # Extract the station with the minimum distance
     closest_station = sorted(station_dict.items(), key=lambda x: x[1])[0][0]
+    usaf = stations.loc[stations['coordinates'] == closest_station, 'usaf'].iloc[0]
+    wban = stations.loc[stations['coordinates'] == closest_station, 'wban'].iloc[0]
 
-    usaf = stations.loc[stations['coordinates'] == closest_station, 'usaf']
-    wban = stations.loc[stations['coordinates'] == closest_station, 'wban']
-
-    ids = str(usaf) + '|' + str(wban)
+    ids = str(usaf) + '/' + str(wban)
 
     return ids
 

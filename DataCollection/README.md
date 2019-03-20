@@ -38,3 +38,14 @@ columns:
 * **avg_nb_precep_days** (REAL): average number of days of precipitation during the month
 * **avg_nb_hail_days** (REAL): average number of days when snow pellets fell during the month
 * **avg_nb_stormy_days** (REAL): average number of stormy days during the month
+
+## AirportData
+
+Folder containing a csv file with airport information,
+downlaoded from https://openflights.org/data.html
+
+The Python scrit `closest_airports.py` creates a new table
+in the database which stores the 3 closest airports for any city. We choose
+?? as the maximum radius in which to look for an airport, as it is the maximum
+distance between any city in our database and the airports for which we have price information.
+This ensures every city will have at least one airport associated with them.

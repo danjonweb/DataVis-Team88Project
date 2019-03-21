@@ -19,3 +19,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+DataCollection/WeatherData/bigquery_key.json

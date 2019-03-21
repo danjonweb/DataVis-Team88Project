@@ -18,7 +18,7 @@ cities_info = pd.read_sql_query("SELECT cid, city, state, lat, lng  FROM cities;
 cities_info['coordinates'] = cities_info.apply(lambda x: (x['lat'], x['lng']), axis=1)
 
 # Read in all the airports with price information
-airport_price = pd.read_sql_query("SELECT *  FROM fligh_price_history;", conn)
+airport_price = pd.read_sql_query("SELECT *  FROM flight_price_history;", conn)
 airports_with_price = airport_price.src.unique().tolist()
 
 # Only keep airports with price information
@@ -37,6 +37,10 @@ for i in range(len(cities_info)):
                         'third_closest_airport': airports[2]})
 
 city_airport = pd.DataFrame(city_airport)
+
+# Reorder the columns
+city_airport = city_airport[['city_id', 'city_name', 'state', 'closest_airport',
+                             'second_closest_airport', 'third_closest_airport']]
 
 # Store to DB
 city_airport.to_sql('city_closest_airport', conn, if_exists='replace', index=False)

@@ -2,6 +2,7 @@
   <section class="sidebar">
 
     <h1 class="menu-title">Menus</h1>
+    <button @click="clickbutton">click</button>
     
     <div v-for="menu in menus" :key="menu.name" class="menu-hold">
       <div class="menu-card">
@@ -33,6 +34,9 @@ export default {
   methods: {
     getImgUrl(pic) {
       return require(`../assets/${pic}`);
+    },
+    clickbutton(){
+      this.$store.dispatch("modCities");
     }
   }
 };

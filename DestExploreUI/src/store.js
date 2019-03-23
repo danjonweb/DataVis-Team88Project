@@ -42,73 +42,73 @@ export default new Vuex.Store({
 
     cities: [
       {
-        code: "OTT",
-        city: "OTTAWA",
-        country: "CANADA",
-        lat: "23.10",
-        lon: "120.34"
+        code: "SFO",
+        city: "San Francisco",
+        country: "USA",
+        lat: "37.7576793",
+        lon: "-122.5076401"
       },
       {
-        code: "BSB",
-        city: "BRASILIA",
-        country: "BRAZIL",
-        lat: "-32.85",
-        lon: "133.30"
+        code: "NYC",
+        city: "New York",
+        country: "USA",
+        lat: "40.6971478",
+        lon: "-74.2605541"
       },
       { 
-        code: "DEL", 
-        city: "DELHI", 
-        country: "INDIA", 
-        lat: "4.71", 
-        lon: "-127.57" },
+        code: "MCO", 
+        city: "Orlando", 
+        country: "USA", 
+        lat: "28.4810968", 
+        lon: "-81.5091793" },
       {
-        code: "CMX",
-        city: "CIDADE DO MÉXICO",
-        country: "MÉXICO",
-        lat: "0.42",
-        lon: "93.19"
-      },
-      {
-        code: "SID",
-        city: "SIDNEY",
-        country: "AUSTRALIA",
-        lat: "-48.38",
-        lon: "-71.71"
-      },
-      {
-        code: "TOK",
-        city: "TOQUIO",
-        country: "JAPÃO",
-        lat: "17.34",
-        lon: "-81.73"
-      },
-      {
-        code: "CCA",
-        city: "CIDADE DO CABO",
-        country: "AFRICA DO SUL",
-        lat: "-43.20",
-        lon: "-171.97"
-      },
-      {
-        code: "CMP",
-        city: "CAMPO GRANDE",
-        country: "BRASIL",
-        lat: "-36.15",
-        lon: "130.72"
-      },
-      {
-        code: "PAR",
-        city: "PARIS",
-        country: "FRANÇA",
-        lat: "22.19",
-        lon: "174.27"
-      },
-      {
-        code: "NOY",
-        city: "NOVA YORK",
+        code: "LAX",
+        city: "Los Angeles",
         country: "USA",
-        lat: "11.23",
-        lon: "112.96"
+        lat: "34.0201597",
+        lon: "-118.6926093"
+      },
+      {
+        code: "PIT",
+        city: "Pittsburg",
+        country: "USA",
+        lat: "40.4312835",
+        lon: "-80.1209284"
+      },
+      {
+        code: "SEA",
+        city: "Seattle",
+        country: "USA",
+        lat: "47.6129428",
+        lon: "-122.4824913"
+      },
+      {
+        code: "ANK",
+        city: "Anchorage",
+        country: "USA",
+        lat: "61.1042033",
+        lon: "-150.5639306"
+      },
+      {
+        code: "HON",
+        city: "Honolulu",
+        country: "USA",
+        lat: "21.3279755",
+        lon: "-157.939503"
+      },
+      {
+        code: "BLX",
+        city: "Biloxi",
+        country: "USA",
+        lat: "30.4265027",
+        lon: "-88.9958055"
+      },
+      {
+        code: "BLD",
+        city: "Boulder",
+        country: "USA",
+        lat: "40.0292887",
+        lon: "-105.3101892"
       }
     ],
 
@@ -196,11 +196,18 @@ export default new Vuex.Store({
     showHideAboutMutation(state, payload) {
       state.showAbout = payload;
     },
+    modCitiesMutate(state){
+      state.cities.pop()
+   
+    }
 
   },
   actions: {
     showHideAboutAction(context, payload) {
       context.commit('showHideAboutMutation', payload);
     },
+    modCities(context){
+      context.commit('modCitiesMutate')
+    }
   },
 });

@@ -6,7 +6,7 @@
     <div v-for="menu in menus" :key="menu.name" class="menu-hold">
       <div class="menu-card">
         <div class="img-holder">
-          <img :src="getImgUrl(menu.image)" class="card-img">
+          <img :src="getImgUrl(menu.image)" class="my-card-img">
         </div>
         <div class="content-holder">
           <div class="card-content">
@@ -78,7 +78,6 @@ export default {
 
 .menu-title {
   margin: 0;
-  height: 7vh;
   padding-top: 3vh;
   background: url(../assets/banner.png);
   -webkit-background-size: cover;
@@ -102,7 +101,7 @@ export default {
   margin: 0;
 }
 
-.card-img {
+.my-card-img {
   padding-top: 5vh;
   height: 50%;
 }

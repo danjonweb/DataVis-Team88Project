@@ -3,7 +3,9 @@
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
       <path stroke="#44D8CB" fill="none" :d="s()"></path>
-      <circle r="4" :cx="x()" :cy="y()" fill="red"></circle>
+
+        <circle v-for="location in locations" :key="location[0].toString()" r="4" :cx="location[0]" :cy="location[1]" fill="red"></circle>
+
     </svg>
   </section>
 </template>
@@ -35,23 +37,35 @@ export default {
     this.path = d3.geoPath().projection(this.projection);
     this.s = () => this.path(states);
     this.c = () => this.path(nation);
-    this.sizeChange()
+    this.sizeChange();
   },
   methods: {
     sizeChange() {
-      if (window.innerWidth > 700){
-        this.projection.scale(0.9*window.innerWidth).translate([window.innerWidth/2.8, window.innerHeight/2.2]);
-      }else{
-        this.projection.scale(1.3*window.innerWidth).translate([window.innerWidth/2, window.innerHeight/3.5]);
+      if (window.innerWidth > 700) {
+        this.projection
+          .scale(0.9 * window.innerWidth)
+          .translate([window.innerWidth / 2.8, window.innerHeight / 2.2]);
+      } else {
+        this.projection
+          .scale(1.3 * window.innerWidth)
+          .translate([window.innerWidth / 2, window.innerHeight / 3.5]);
       }
-      
 
       this.path = d3.geoPath().projection(this.projection);
       this.s = () => this.path(states);
       this.c = () => this.path(nation);
-      //37.7576793,-122.5076401
-      this.x = () => this.projection([-122.5076401, 37.7576793])[0];
-      this.y = () => this.projection([-122.5076401, 37.7576793])[1];
+      //40.0292887,-105.3101892
+      this.locations = [this.projection([-122.5076401, 37.7576793]), 
+      this.projection([-74.2605541, 40.6971478]),
+      this.projection([-81.5091793, 28.4810968]),
+      this.projection([-118.6926093, 34.0201597]),
+      this.projection([-80.1209284, 40.4312835]),
+      this.projection([-122.4824913,47.6129428]),
+      this.projection([-150.5639306, 61.1042033]),
+      this.projection([-157.939503, 21.3279755]),
+      this.projection([-88.9958055, 30.4265027]),
+      this.projection([-105.3101892, 40.0292887]),];
+
     }
   }
 };

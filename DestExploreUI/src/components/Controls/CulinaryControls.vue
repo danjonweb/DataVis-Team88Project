@@ -8,8 +8,35 @@
         <img :src="getImgUrl('Culinary.png')" class="my-card-img">
       </div>
     </div>
-    <div class="content-holder">
-      <button @click="clickbutton">click</button>
+    <div class="culinary-select">
+      <b-button
+        id="exPopoverReactive2"
+        :disabled="foodPopoverShow"
+        size="sm"
+        :variant="buttonFill"
+        ref="button"
+      >Select Culinary Preferences</b-button>
+      <div :hidden="!itemsSelected">Culinary Prerences Are Selected</div>
+      <b-popover
+        target="exPopoverReactive2"
+        triggers="click"
+        :show.sync="foodPopoverShow"
+        placement="auto"
+        container="myContainer"
+        ref="popover"
+      >
+        <template slot="title">
+          <b-button @click="onClose" class="close" aria-label="Close">
+            <span class="d-inline-block" aria-hidden="true"> &nbsp; &times; &nbsp;</span>
+          </b-button> <strong>Culinary Selection</strong> 
+        </template>
+
+        <div>
+          <b-form-group label="Culinary Preferences">
+            <b-form-checkbox-group switches v-model="foodSelected" stacked :options="options"/>
+          </b-form-group>
+        </div>
+      </b-popover>
     </div>
   </div>
 </template>
@@ -20,19 +47,40 @@ export default {
   name: "Team88CulinaryControls",
   components: {},
   data: function() {
-    return {};
+    return {
+      foodPopoverShow: false,
+      foodSelected: [], // Must be an array reference!
+      options: this.$store.state.culinaryOptions,
+      itemsSelected:false,
+      buttonFill: 'outline-primary'
+    };
   },
   methods: {
     getImgUrl(pic) {
       return require(`../../assets/${pic}`);
     },
-    clickbutton() {
-      this.$store.dispatch("modCities");
+    onClose() {
+      this.foodPopoverShow = false;
+    }
+  },
+  watch: {
+    foodSelected () {
+      if(this.foodSelected.length > 0){
+        this.itemsSelected = true
+        this.buttonFill = 'primary'
+      }else{
+        this.itemsSelected = false
+        this.buttonFill = 'outline-primary'
+      }
     }
   }
+
 };
 </script>
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
+.culinary-select {
+  margin-top: 4vh;
+}
 </style>

@@ -8,6 +8,41 @@ export default new Vuex.Store({
     showAbout: true,
     budget: 1000,
 
+    selectedActivities: [],
+
+    activityOptions: [
+      { text: "Backpacking", value: "backpacking", disabled: false },
+      { text: "Concerts", value: "concerts", disabled: false },
+      { text: "Fishing", value: "fishing", disabled: false },
+      { text: "Gambling", value: "gambling", disabled: false },
+      { text: "Golfing", value: "golfing", disabled: false },
+      { text: "Museums", value: "museums", disabled: false },
+      { text: "Professional Sports", value: "professional sports", disabled: false },
+      { text: "Sky Diving", value: "sky diving", disabled: false },
+      { text: "Tours", value: "tours", disabled: false },
+      { text: "Water Sports", value: "water sports", disabled: false }
+    ],
+
+    selectedFood: [],
+
+    culinaryOptions: [
+      { text: "American", value: "american", disabled: false },
+      { text: "Chinese", value: "chinese", disabled: false },
+      { text: "French", value: "french", disabled: false },
+      { text: "Greek", value: "greek", disabled: false },
+      { text: "Indian", value: "indian", disabled: false },
+      { text: "Italian", value: "italian", disabled: false },
+      { text: "Japanese", value: "japanese", disabled: false },
+      { text: "Korean", value: "korean", disabled: false },
+      { text: "Lebanese", value: "lebanese", disabled: false },
+      { text: "Mexican", value: "mexican", disabled: false },
+      { text: "Soul Food", value: "soul", disabled: false },
+      { text: "Thai", value: "thai", disabled: false },
+      { text: "Vietnamese", value: "vietnamese", disabled: false }
+    ],
+
+    crimeRating: 1.5,
+
     cities: [
       {
         code: "SFO",
@@ -213,7 +248,7 @@ export default new Vuex.Store({
 
     },
 
-    setBudgetMutation(state, payload){
+    setBudgetMutation(state, payload) {
       state.budget = payload
     }
   },

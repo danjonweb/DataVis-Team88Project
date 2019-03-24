@@ -9,7 +9,26 @@
       </div>
     </div>
     <div class="content-holder">
-      <button @click="clickbutton">click</button>
+      <b-input-group class="budget-input" size="sm" prepend="Budget per Person">
+        <b-input-group-prepend is-text>
+          <b>$</b>
+        </b-input-group-prepend>
+        <b-form-input
+          type="number"
+          :value="budget"
+          v-on:change="onChange($event)"
+          aria-label="Text input with checkbox"
+        />
+      </b-input-group>
+      <b-input-group prepend="0" append="5000" size="sm" class="mt-3 budget-slider">
+        <b-form-input
+          :value="budget"
+          v-on:change="onChange($event)"
+          type="range"
+          min="0"
+          max="5000"
+        />
+      </b-input-group>
     </div>
   </div>
 </template>
@@ -20,7 +39,9 @@ export default {
   name: "Team88BudgetControls",
   components: {},
   data: function() {
-    return {};
+    return {
+      budget: 1000
+    };
   },
   methods: {
     getImgUrl(pic) {
@@ -28,6 +49,10 @@ export default {
     },
     clickbutton() {
       this.$store.dispatch("modCities");
+    },
+    onChange(e) {
+      this.budget = e;
+      this.$store.dispatch("setBudgetAction", e);
     }
   }
 };
@@ -35,5 +60,17 @@ export default {
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
+
+.budget-input {
+  margin: 1vh;
+  margin-top: 2vh;
+  width: 96%;
+  font-size: 5px;
+}
+
+.budget-slider {
+  margin: 1vh;
+  width: 96%;
+}
 </style>
 

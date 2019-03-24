@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     showAbout: true,
+    budget: 1000,
 
     cities: [
       {
@@ -13,70 +14,112 @@ export default new Vuex.Store({
         city: "San Francisco",
         country: "USA",
         lat: "37.7576793",
-        lon: "-122.5076401"
+        lon: "-122.5076401",
+        cost: 0
       },
       {
         code: "NYC",
         city: "New York",
         country: "USA",
         lat: "40.6971478",
-        lon: "-74.2605541"
+        lon: "-74.2605541",
+        cost: 3700.0
       },
       {
         code: "MCO",
         city: "Orlando",
         country: "USA",
         lat: "28.4810968",
-        lon: "-81.5091793"
+        lon: "-81.5091793",
+        cost: 2000.0
       },
       {
         code: "LAX",
         city: "Los Angeles",
         country: "USA",
         lat: "34.0201597",
-        lon: "-118.6926093"
+        lon: "-118.6926093",
+        cost: 700.0
       },
       {
         code: "PIT",
         city: "Pittsburg",
         country: "USA",
         lat: "40.4312835",
-        lon: "-80.1209284"
+        lon: "-80.1209284",
+        cost: 1700.0
       },
       {
         code: "SEA",
         city: "Seattle",
         country: "USA",
         lat: "47.6129428",
-        lon: "-122.4824913"
+        lon: "-122.4824913",
+        cost: 900.0
       },
       {
         code: "ANK",
         city: "Anchorage",
         country: "USA",
         lat: "61.1042033",
-        lon: "-150.5639306"
+        lon: "-150.5639306",
+        cost: 4000.0
       },
       {
         code: "HON",
         city: "Honolulu",
         country: "USA",
         lat: "21.3279755",
-        lon: "-157.939503"
+        lon: "-157.939503",
+        cost: 4500.0
       },
       {
         code: "BLX",
         city: "Biloxi",
         country: "USA",
         lat: "30.4265027",
-        lon: "-88.9958055"
+        lon: "-88.9958055",
+        cost: 1200.0
       },
       {
         code: "BLD",
         city: "Boulder",
         country: "USA",
         lat: "40.0292887",
-        lon: "-105.3101892"
+        lon: "-105.3101892",
+        cost: 950.0
+      },
+      {
+        code: "MIA",
+        city: "Miami",
+        country: "USA",
+        lat: "25.7825453",
+        lon: "-80.299499",
+        cost: 3000.0
+      },
+      {
+        code: "ALB",
+        city: "Albany",
+        country: "USA",
+        lat: "42.6681893",
+        lon: "-73.8807211",
+        cost: 2700.0
+      },
+      {
+        code: "AUS",
+        city: "Austin",
+        country: "USA",
+        lat: "30.3080553",
+        lon: "-98.0335947",
+        cost: 1000
+      },
+      {
+        code: "RAL",
+        city: "Raleigh",
+        country: "USA",
+        lat: "35.843965",
+        lon: "-78.7851415",
+        cost: 3800.0
       }
     ],
 
@@ -164,11 +207,15 @@ export default new Vuex.Store({
     showHideAboutMutation(state, payload) {
       state.showAbout = payload;
     },
+
     modCitiesMutate(state) {
       state.cities.pop()
 
-    }
+    },
 
+    setBudgetMutation(state, payload){
+      state.budget = payload
+    }
   },
   actions: {
     showHideAboutAction(context, payload) {
@@ -176,6 +223,9 @@ export default new Vuex.Store({
     },
     modCities(context) {
       context.commit('modCitiesMutate')
-    }
+    },
+    setBudgetAction(context, payload) {
+      context.commit('setBudgetMutation', payload);
+    },
   },
 });

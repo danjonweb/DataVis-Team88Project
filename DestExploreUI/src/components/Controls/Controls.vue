@@ -48,8 +48,9 @@ export default {
 <style scoped lang='scss'>
 
 .sidebar {
-  height: 30vh;
+  height: 35vh;
   width: 100vw;
+  min-width: 300px;
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box; /* Firefox, other Gecko */
   box-sizing: border-box;
@@ -63,6 +64,7 @@ export default {
   .sidebar {
     height: 87vh;
     width: 30vw;
+    min-width: 300px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;

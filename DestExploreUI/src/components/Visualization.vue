@@ -7,7 +7,7 @@
       <circle
         v-for="location in locations"
         :key="location[0].toString()"
-        r="6"
+        r="7"
         :cx="location[0]"
         :cy="location[1]"
         fill="red"
@@ -48,10 +48,16 @@ export default {
   computed: {
     cities() {
       return this.$store.state.cities;
+    },
+    budget() {
+      return this.$store.state.budget;
     }
   },
   watch: {
     cities() {
+      this.draw();
+    },
+    budget() {
       this.draw();
     }
   },
@@ -80,8 +86,10 @@ export default {
       this.c = () => this.path(nation);
       this.locations = [];
       this.cities.forEach(city => {
-        var coords = this.projection([city.lon, city.lat]);
-        this.locations.push(coords);
+        if (city.cost <= this.budget) {
+          var coords = this.projection([city.lon, city.lat]);
+          this.locations.push(coords);
+        }
       });
     }
   }
@@ -90,7 +98,7 @@ export default {
 
 <style scoped lang='scss'>
 .visualization {
-  height: 62vh;
+  height: 52vh;
   width: 100vw;
   min-width: 100vw;
   background-color: rgb(247, 247, 247);
@@ -111,7 +119,7 @@ export default {
   .visualization {
     width: 70vw;
     height: 92vh;
-    min-width: 48px;
+    min-width: 580px;
     background-color: rgb(247, 247, 247);
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box; /* Firefox, other Gecko */

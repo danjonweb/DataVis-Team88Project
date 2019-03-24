@@ -12,10 +12,9 @@
       <div class="mt-2">Risk Level: {{ crimeValue }}</div>
       <b-input-group size="sm" class="mt-3 crime-slider">
         <b-input-group-prepend>
-          <b-button size="sm" text="Button" :variant="colorCode" @click="clickDown">Very Safe</b-button>
+          <b-button size="sm" class="no-hov" :variant="colorCode" >Very Safe</b-button>
         </b-input-group-prepend>
         <b-form-input
-          class="slide"
           type="range"
           id="range-2"
           v-model="crimeValue"
@@ -24,7 +23,7 @@
           step="0.5"
         />
         <b-input-group-append>
-          <b-button size="sm" text="Button" :variant="colorCode" @click="clickUp">Some Risk</b-button>
+          <b-button size="sm" class="no-hov" :variant="colorCode">Some Risk</b-button>
         </b-input-group-append>
       </b-input-group>
     </div>
@@ -45,16 +44,6 @@ export default {
   methods: {
     getImgUrl(pic) {
       return require(`../../assets/${pic}`);
-    },
-    clickDown() {
-      if (this.crimeValue > 0) {
-        this.crimeValue -= 0.5;
-      }
-    },
-    clickUp() {
-      if (this.crimeValue < 5) {
-        this.crimeValue += 0.5;
-      }
     }
   },
   watch: {
@@ -82,4 +71,9 @@ export default {
   width: 96%;
   overflow: auto;
 }
+.no-hov{
+  pointer-events: none;  
+}
+
+
 </style>

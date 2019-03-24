@@ -1,9 +1,9 @@
 <template>
   <div class="header-content-holder">
-
     <div class="nav-links-holder">
       <div v-if="this.$store.state.showAbout">
-        <router-link to="/about" class="app-links">About
+        <router-link to="/about" class="app-links">
+          About
           <br>Team 88
         </router-link>
       </div>
@@ -21,10 +21,10 @@
 
     <div v-if="this.$store.state.showAbout" class="project-links-holder app-links">
       <router-link to="/project" class="app-links">
-      Project<br>Docs
+        Project
+        <br>Docs
       </router-link>
     </div>
-    
   </div>
 </template>
 
@@ -44,7 +44,7 @@ export default {
   min-width: 320;
   height: 8vh;
   min-height: 30px;
-  box-shadow: 0vh 0.5vh rgba(15, 12, 1, 0.247);
+  box-shadow: 0vh 3px 3px rgba(15, 12, 1, 0.226);
   display: flex;
   background: url(../../assets/banner.png);
   -webkit-background-size: cover;
@@ -69,7 +69,7 @@ export default {
 .title-text {
   margin-top: 2vh;
   padding: 0;
-  width: 68vw;
+  width: 65vw;
   font-size: calc(9px + 2vmin);
   font-weight: 600;
   color: rgb(0, 0, 0);
@@ -78,7 +78,7 @@ export default {
 .nav-links-holder {
   text-align: left;
   padding-left: 1vw;
-  width: 15vw;
+  width: 18vw;
   min-width: 48px;
   font-size: calc(5px + 1.3vh);
   padding-top: 1vmin;
@@ -100,25 +100,21 @@ export default {
   text-decoration: none;
 }
 
-@media (min-height: 400px) {
-  .nav-links-holder {
-    text-align: left;
-    padding-left: 1vw;
-    width: 15vw;
-    min-width: 48px;
-    font-size: calc(5px + 1.3vh);
-    padding-top: 2vmin;
-    font-weight: 600;
+@media (min-width: 733px) {
+  .header-content-holder {
+    width: 100vw;
+    min-width: 320;
+    height: 8vh;
+    min-height: 30px;
+    display: flex;
+    box-shadow: 0vh 0px 0px rgba(15, 12, 1, 0);
+    background: url(../../assets/banner.png);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow: auto;
   }
 
-  .project-links-holder {
-    text-align: right;
-    padding-right: 1vw;
-    width: 15vw;
-    min-width: 48px;
-    font-size: calc(5px + 1.3vh);
-    padding-top: 2vmin;
-    font-weight: 600;
-  }
 }
 </style>

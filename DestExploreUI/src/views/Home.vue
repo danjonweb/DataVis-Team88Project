@@ -1,20 +1,25 @@
 <template>
   <section class="explorer">
     <Team88Visual/>
-    <Team88Controls/>
+    <div>
+      <Team88ControlsHeader/>
+      <Team88Controls/>
+    </div>
   </section>
 </template>
 
 <script>
 // @ is an alias to /src
-import Team88Controls from '@/components/Controls.vue';
-import Team88Visual from '@/components/Visualization.vue';
+import Team88ControlsHeader from "@/components/Controls/ControlsHeader.vue";
+import Team88Controls from "@/components/Controls/Controls.vue";
+import Team88Visual from "@/components/Visualization.vue";
 
 export default {
   name: "Team88Home",
   components: {
+    Team88ControlsHeader,
     Team88Controls,
-    Team88Visual,
+    Team88Visual
   },
   mounted() {
     this.$store.dispatch("showHideAboutAction", true);
@@ -35,7 +40,6 @@ export default {
     background-color: rgb(204, 204, 204);
     display: flex;
   }
-
 }
 </style>
 

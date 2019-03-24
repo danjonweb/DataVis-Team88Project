@@ -2,17 +2,16 @@
   <section class="visualization">
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
-      <path stroke="#44D8CB" fill="none" :d="s()"></path>
+      <path stroke="#4FCCEA" fill="none" :d="s()"></path>
 
       <circle
         v-for="location in locations"
         :key="location[0].toString()"
-        r="4"
+        r="6"
         :cx="location[0]"
         :cy="location[1]"
         fill="red"
       ></circle>
-
     </svg>
   </section>
 </template>
@@ -33,7 +32,7 @@ export default {
   data: function() {
     return {
       s: null,
-      path: null,
+      path: null
     };
   },
   beforeMount() {
@@ -47,18 +46,23 @@ export default {
     this.sizeChange();
   },
   computed: {
-    cities (){
-      return this.$store.state.cities
+    cities() {
+      return this.$store.state.cities;
     }
   },
-  watch:{
-    cities(){
-      this.draw()
+  watch: {
+    cities() {
+      this.draw();
     }
   },
   methods: {
     sizeChange() {
-      if (window.innerWidth > 700) {
+      var ratio = window.innerWidth / window.innerHeight;
+      if (ratio < 1.8 && ratio > 1) {
+        this.projection
+          .scale(0.9 * window.innerWidth)
+          .translate([window.innerWidth / 2.8, window.innerHeight / 2.2]);
+      } else if (window.innerWidth >= 733) {
         this.projection
           .scale(0.9 * window.innerWidth)
           .translate([window.innerWidth / 2.8, window.innerHeight / 2.2]);
@@ -74,11 +78,10 @@ export default {
       this.path = d3.geoPath().projection(this.projection);
       this.s = () => this.path(states);
       this.c = () => this.path(nation);
-      //this.projection([-122.4824913, 47.6129428])
       this.locations = [];
       this.cities.forEach(city => {
-        var coords = this.projection([city.lon, city.lat])
-        this.locations.push(coords)
+        var coords = this.projection([city.lon, city.lat]);
+        this.locations.push(coords);
       });
     }
   }
@@ -97,6 +100,7 @@ export default {
   border: 1px solid #000;
   border-top: none;
   overflow: auto;
+  box-shadow: inset 10px -10px 8px -9px rgba(15, 12, 1, 0.226);
 }
 .fuller {
   width: 100%;

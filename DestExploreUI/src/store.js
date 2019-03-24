@@ -7,39 +7,6 @@ export default new Vuex.Store({
   state: {
     showAbout: true,
 
-    menus: [
-      {
-        name: "Budget",
-        image: "budget.png",
-        type: "slider"
-      },
-      {
-        name: "Availability",
-        image: "avail.png",
-        type: "date-range"
-      },
-      {
-        name: "Weather",
-        image: "weather.png",
-        type: "inputs"
-      },
-      {
-        name: "Activity",
-        image: "active.png",
-        type: "multi-select"
-      },
-      {
-        name: "Culinary",
-        image: "Culinary.png",
-        type: "slider"
-      },
-      {
-        name: "Crime",
-        image: "crime.png",
-        type: "muli-select"
-      }
-    ],
-
     cities: [
       {
         code: "SFO",
@@ -55,12 +22,13 @@ export default new Vuex.Store({
         lat: "40.6971478",
         lon: "-74.2605541"
       },
-      { 
-        code: "MCO", 
-        city: "Orlando", 
-        country: "USA", 
-        lat: "28.4810968", 
-        lon: "-81.5091793" },
+      {
+        code: "MCO",
+        city: "Orlando",
+        country: "USA",
+        lat: "28.4810968",
+        lon: "-81.5091793"
+      },
       {
         code: "LAX",
         city: "Los Angeles",
@@ -196,9 +164,9 @@ export default new Vuex.Store({
     showHideAboutMutation(state, payload) {
       state.showAbout = payload;
     },
-    modCitiesMutate(state){
+    modCitiesMutate(state) {
       state.cities.pop()
-   
+
     }
 
   },
@@ -206,7 +174,7 @@ export default new Vuex.Store({
     showHideAboutAction(context, payload) {
       context.commit('showHideAboutMutation', payload);
     },
-    modCities(context){
+    modCities(context) {
       context.commit('modCitiesMutate')
     }
   },

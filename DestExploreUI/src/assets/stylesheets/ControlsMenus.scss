@@ -1,0 +1,44 @@
+.menu-hold {
+    height: 22vh;
+    background-color: rgb(243, 243, 243);
+  }
+  
+  .menu-header {
+    width: 100%;
+    height: 5vh;
+    margin: 0;
+    background-color: #a0a0a0;
+    border-top: 0.3vh solid rgba(163, 163, 163, 0.726);
+    display: flex;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0px 2px 2px #888888;
+  }
+  
+  .img-holder {
+    width: 20%;
+    height: 5vh;
+    padding: 0;
+    margin: 0;
+  }
+  .menu-title-holder {
+    text-align: left;
+    height: 20%;
+    width: 80%;
+  }
+  .title-text {
+    padding-left: 3px;
+    margin-bottom: 0;
+    font-size: calc(12px + 0.9vh);
+  }
+  
+  .my-card-img {
+    padding: 0;
+    margin: 0;
+    height: 90%;
+  }
+  
+  .content-holder {
+    width: 49%;
+    height: 100%;
+    text-align: right;
+  }

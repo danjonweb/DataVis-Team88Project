@@ -42,7 +42,7 @@ export default new Vuex.Store({
     ],
 
     crimeRating: 1.5,
-
+    // give data pre computed.
     cities: [
       {
         code: "SFO",

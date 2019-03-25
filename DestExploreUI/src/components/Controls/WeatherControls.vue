@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-hold">
+  <div>
     <div class="menu-header">
       <div class="menu-title-holder">
         <p class="title-text">Weather</p>
@@ -8,7 +8,7 @@
         <img :src="getImgUrl('weather.png')" class="my-card-img">
       </div>
     </div>
-    <div class="content-holder">
+    <div class="weather-holder menu-background">
       <b-input-group class="temp-box" size="sm">
         <b-input-group-text slot="prepend" class="pre-tag">Ideal Temp (F)</b-input-group-text>
 
@@ -71,20 +71,19 @@ export default {
     },
     idealChange() {
       this.idealOn = !this.idealOn;
-      if (!this.idealOn){
-        console.log('Temp Preference Off')
-      }else{
-        console.log("Min",this.minTemp, "Max",this.maxTemp);
+      if (!this.idealOn) {
+        console.log("Temp Preference Off");
+      } else {
+        console.log("Min", this.minTemp, "Max", this.maxTemp);
       }
-      
     },
     tempTolValueChange(e) {
       this.tempTol = parseInt(e);
-      console.log("Min",this.minTemp, "Max",this.maxTemp);
+      console.log("Min", this.minTemp, "Max", this.maxTemp);
     },
     idealTempValueChange(e) {
       this.idealTemp = parseInt(e);
-      console.log("Min",this.minTemp, "Max",this.maxTemp);
+      console.log("Min", this.minTemp, "Max", this.maxTemp);
     }
   }
 };
@@ -92,6 +91,11 @@ export default {
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
+.weather-holder {
+  height: 25vh;
+  padding: 4vh 0 4vh 0;
+  overflow: auto;
+}
 .temp-box {
   margin: 1vh;
   margin-top: 2vh;
@@ -102,7 +106,7 @@ export default {
   width: 50vw;
 }
 
-@media (orientation: landscape), (min-width: 769px) {
+@media (orientation: landscape), (min-width: 733px) {
   .pre-tag {
     width: 14vw;
   }

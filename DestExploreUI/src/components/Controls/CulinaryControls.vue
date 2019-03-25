@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-hold">
+  <div>
     <div class="menu-header">
       <div class="menu-title-holder">
         <p class="title-text">Culinary</p>
@@ -8,7 +8,7 @@
         <img :src="getImgUrl('Culinary.png')" class="my-card-img">
       </div>
     </div>
-    <div class="culinary-select">
+    <div class="culinary-holder menu-background">
       <b-button
         id="exPopoverReactive2"
         :disabled="foodPopoverShow"
@@ -80,7 +80,9 @@ export default {
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
-.culinary-select {
-  margin-top: 4vh;
+.culinary-holder {
+  height: 25vh;
+  padding: 4vh 0 4vh 0;
+  overflow: auto;
 }
 </style>

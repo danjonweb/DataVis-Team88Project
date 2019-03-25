@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-hold">
+  <div>
     <div class="menu-header">
       <div class="menu-title-holder">
         <p class="title-text">Availability</p>
@@ -8,7 +8,7 @@
         <img :src="getImgUrl('avail.png')" class="my-card-img">
       </div>
     </div>
-    <div class="content-holder-date">
+    <div class="availability-holder menu-background">
       <VueHotelDatepicker
         class="date-picker"
         mobile="mobile"
@@ -50,7 +50,9 @@ export default {
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
-.content-holder-date {
-  margin-top: 4vh;
+.availability-holder {
+  height: 25vh;
+  padding: 4vh 0 4vh 0;
+  overflow: show;
 }
 </style>

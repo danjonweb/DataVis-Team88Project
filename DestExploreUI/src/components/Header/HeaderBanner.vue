@@ -1,5 +1,6 @@
 <template>
   <div class="header-content-holder">
+    <div class="bg"></div>
     <div class="nav-links-holder">
       <div v-if="this.$store.state.showAbout">
         <router-link to="/about" class="app-links">
@@ -39,19 +40,28 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 .header-content-holder {
-  background-color: rgba(63, 63, 63, 0.541);
   width: 100vw;
   min-width: 320;
   height: 8vh;
   min-height: 30px;
   box-shadow: 0vh 3px 3px rgba(15, 12, 1, 0.226);
   display: flex;
+  overflow: auto;
+}
+
+.header-content-holder .bg {
+  position: absolute;
+  z-index: -1;
   background: url(../../assets/banner.png);
+  width: 100vw;
+  min-width: 320;
+  height: 8vh;
+  min-height: 30px;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  overflow: auto;
+  opacity: 0.6;
 }
 
 .title-holder {
@@ -108,13 +118,23 @@ export default {
     min-height: 30px;
     display: flex;
     box-shadow: 0vh 0px 0px rgba(15, 12, 1, 0);
+    overflow: auto;
+  }
+
+  .header-content-holder .bg {
+    width: 100vw;
+    min-width: 320;
+    height: 8vh;
+    min-height: 30px;
+    display: flex;
+    position: absolute;
+    z-index: -1;
     background: url(../../assets/banner.png);
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    overflow: auto;
+    opacity: 0.6;
   }
-
 }
 </style>

@@ -84,6 +84,7 @@ export default {
       this.path = d3.geoPath().projection(this.projection);
       this.s = () => this.path(states);
       this.c = () => this.path(nation);
+      // insert algo here
       this.locations = [];
       this.cities.forEach(city => {
         if (city.cost <= this.budget) {
@@ -115,7 +116,7 @@ export default {
   height: 100%;
 }
 
-@media (orientation: landscape), (min-width: 769px) {
+@media (orientation: landscape), (min-width: 733px) {
   .visualization {
     width: 70vw;
     height: 92vh;

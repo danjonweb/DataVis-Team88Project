@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-hold">
+  <div >
     <div class="menu-header">
       <div class="menu-title-holder">
         <p class="title-text">Budget</p>
@@ -8,7 +8,7 @@
         <img :src="getImgUrl('budget.png')" class="my-card-img">
       </div>
     </div>
-    <div class="content-holder">
+    <div v-if="true" class="budget-holder menu-background">
       <b-input-group class="budget-input" size="sm" prepend="Budget per Person">
         <b-input-group-prepend is-text>
           <b>$</b>
@@ -47,9 +47,6 @@ export default {
     getImgUrl(pic) {
       return require(`../../assets/${pic}`);
     },
-    clickbutton() {
-      this.$store.dispatch("modCities");
-    },
     onChange(e) {
       this.budget = e;
       this.$store.dispatch("setBudgetAction", e);
@@ -60,6 +57,12 @@ export default {
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
+
+.budget-holder {
+  height: 25vh;
+  padding: 4vh 0 4vh 0;
+  overflow: auto;
+}
 
 .budget-input {
   margin: 1vh;

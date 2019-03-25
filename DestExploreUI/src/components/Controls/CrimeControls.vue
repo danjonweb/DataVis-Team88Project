@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-hold">
+  <div>
     <div class="menu-header">
       <div class="menu-title-holder">
         <p class="title-text">Crime</p>
@@ -8,7 +8,7 @@
         <img :src="getImgUrl('crime.png')" class="my-card-img">
       </div>
     </div>
-    <div class="crime-holder">
+    <div class="crime-holder menu-background">
       <div class="mt-2">Risk Level: {{ crimeValue }}</div>
       <b-input-group size="sm" class="mt-3 crime-slider">
         <b-input-group-prepend>
@@ -63,8 +63,9 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .crime-holder {
+  height: 25vh;
+  padding: 4vh 0 4vh 0;
   overflow: auto;
-  height: 75%;
 }
 .crime-slider {
   margin: 1vh;

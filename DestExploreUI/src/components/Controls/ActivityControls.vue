@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-hold">
+  <div>
     <div class="menu-header">
       <div class="menu-title-holder">
         <p class="title-text">Activity</p>
@@ -8,7 +8,7 @@
         <img :src="getImgUrl('active.png')" class="my-card-img">
       </div>
     </div>
-    <div class="activity-select">
+    <div class="activity-holder menu-background">
       <b-button
         id="exPopoverReactive1"
         :disabled="popoverShow"
@@ -27,8 +27,9 @@
       >
         <template slot="title">
           <b-button @click="onClose" class="close" aria-label="Close">
-            <span class="d-inline-block" aria-hidden="true"> &nbsp; &times; &nbsp;</span>
-          </b-button> <strong>Activity Selection</strong> 
+            <span class="d-inline-block" aria-hidden="true">&nbsp; &times; &nbsp;</span>
+          </b-button>
+          <strong>Activity Selection</strong>
         </template>
 
         <div>
@@ -51,8 +52,8 @@ export default {
       popoverShow: false,
       selected: [], // Must be an array reference!
       options: this.$store.state.activityOptions,
-      itemsSelected:false,
-      buttonFill: 'outline-primary'
+      itemsSelected: false,
+      buttonFill: "outline-primary"
     };
   },
   methods: {
@@ -64,24 +65,24 @@ export default {
     }
   },
   watch: {
-    selected () {
-      if(this.selected.length > 0){
-        this.itemsSelected = true
-       this.buttonFill = 'primary'
-      }else{
-        this.itemsSelected = false
-        this.buttonFill = 'outline-primary'
+    selected() {
+      if (this.selected.length > 0) {
+        this.itemsSelected = true;
+        this.buttonFill = "primary";
+      } else {
+        this.itemsSelected = false;
+        this.buttonFill = "outline-primary";
       }
     }
   }
-
 };
 </script>
 
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
-.activity-select {
-  margin-top: 4vh;
+.activity-holder {
+  height: 25vh;
+  padding: 4vh 0 4vh 0;
+  overflow: auto;
 }
-
 </style>

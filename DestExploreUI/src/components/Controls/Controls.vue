@@ -1,4 +1,6 @@
 <template>
+<div>
+  <Team88ControlsHeader/>
   <section class="sidebar">
     <Team88BudgetControls/>
     <Team88AvailabilityControls/>
@@ -7,10 +9,12 @@
     <Team88CulinaryControls/>
     <Team88CrimeControls/>
   </section>
+  </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import Team88ControlsHeader from "@/components/Controls/ControlsHeader.vue";
 import Team88BudgetControls from "@/components/Controls/BudgetControls.vue";
 import Team88AvailabilityControls from "@/components/Controls/AvailabilityControls.vue";
 import Team88WeatherControls from "@/components/Controls/WeatherControls.vue";
@@ -21,6 +25,7 @@ import Team88CrimeControls from "@/components/Controls/CrimeControls.vue";
 export default {
   name: "Team88Controls",
   components: {
+    Team88ControlsHeader,
     Team88BudgetControls,
     Team88AvailabilityControls,
     Team88WeatherControls,
@@ -60,7 +65,7 @@ export default {
   -webkit-overflow-scrolling: touch;
 }
 
-@media (orientation: landscape), (min-width: 769px) {
+@media (orientation: landscape), (min-width: 733px) {
   .sidebar {
     height: 87vh;
     width: 30vw;
@@ -70,6 +75,7 @@ export default {
     box-sizing: border-box;
     border: 1px solid #000;
     border-top: none;
+    overflow: auto;
   }
 }
 

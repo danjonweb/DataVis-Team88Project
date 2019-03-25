@@ -14,6 +14,7 @@
     box-shadow: 0px 2px 2px #888888;
     z-index: 100;
     overflow: auto;
+    border-bottom: 1px solid rgb(77, 77, 77);
   }
   
   .img-holder {
@@ -39,9 +40,7 @@
     height: 90%;
   }
   
-  .content-holder {
-    width: 100%;
-    height: 75%;
-    text-align: right;
-    overflow: auto;
+
+  .menu-background {
+    background-color: rgb(200, 200, 200);
   }

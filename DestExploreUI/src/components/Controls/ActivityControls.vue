@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="menu-header">
-      <div class="menu-title-holder">
+    <div class="menu-header" :class="{active: !activityExpand}" @click="expand">
+      <div class="menu-title-holder" :class="{active: !activityExpand}" @click="expand">
         <p class="title-text">Activity</p>
       </div>
-      <div class="img-holder">
+      <div class="img-holder" :class="{active: !activityExpand}" @click="expand">
         <img :src="getImgUrl('active.png')" class="my-card-img">
       </div>
     </div>
-    <div class="activity-holder menu-background">
+    <div v-if="activityExpand" class="activity-holder menu-background">
       <b-button
         id="exPopoverReactive1"
         :disabled="popoverShow"
@@ -47,13 +47,17 @@
 export default {
   name: "Team88ActivityControls",
   components: {},
+  props: {
+    activityExpand: Boolean
+  },
   data: function() {
     return {
       popoverShow: false,
       selected: [], // Must be an array reference!
       options: this.$store.state.activityOptions,
       itemsSelected: false,
-      buttonFill: "outline-primary"
+      buttonFill: "outline-primary",
+      expanded: false
     };
   },
   methods: {
@@ -62,6 +66,10 @@ export default {
     },
     onClose() {
       this.popoverShow = false;
+    },
+    expand() {
+      this.exapnded = this.activityExpand;
+      this.$emit("expanded", [!this.expanded]);
     }
   },
   watch: {
@@ -81,7 +89,6 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .activity-holder {
-  height: 25vh;
   padding: 4vh 0 4vh 0;
   overflow: auto;
 }

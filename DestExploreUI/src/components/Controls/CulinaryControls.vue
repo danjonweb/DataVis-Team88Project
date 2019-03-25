@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="menu-header">
-      <div class="menu-title-holder">
+    <div class="menu-header" :class="{active: !culinaryExpand}" @click="expand">
+      <div class="menu-title-holder" :class="{active: !culinaryExpand}" @click="expand">
         <p class="title-text">Culinary</p>
       </div>
-      <div class="img-holder">
+      <div class="img-holder" :class="{active: !culinaryExpand}" @click="expand">
         <img :src="getImgUrl('Culinary.png')" class="my-card-img">
       </div>
     </div>
-    <div class="culinary-holder menu-background">
+    <div v-if="culinaryExpand" class="culinary-holder menu-background">
       <b-button
         id="exPopoverReactive2"
         :disabled="foodPopoverShow"
@@ -46,13 +46,17 @@
 export default {
   name: "Team88CulinaryControls",
   components: {},
+  props: {
+    culinaryExpand: Boolean
+  },
   data: function() {
     return {
       foodPopoverShow: false,
       foodSelected: [], // Must be an array reference!
       options: this.$store.state.culinaryOptions,
       itemsSelected:false,
-      buttonFill: 'outline-primary'
+      buttonFill: 'outline-primary',
+      expanded: false
     };
   },
   methods: {
@@ -61,6 +65,10 @@ export default {
     },
     onClose() {
       this.foodPopoverShow = false;
+    },
+    expand() {
+      this.exapnded = this.culinaryExpand;
+      this.$emit("expanded", [!this.expanded]);
     }
   },
   watch: {
@@ -81,7 +89,6 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .culinary-holder {
-  height: 25vh;
   padding: 4vh 0 4vh 0;
   overflow: auto;
 }

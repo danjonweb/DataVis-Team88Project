@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="menu-header">
-      <div class="menu-title-holder">
+    <div class="menu-header" :class="{active: !availabilityExpand}" @click="expand">
+      <div class="menu-title-holder" :class="{active: !availabilityExpand}" @click="expand">
         <p class="title-text">Availability</p>
       </div>
-      <div class="img-holder">
+      <div class="img-holder" :class="{active: !availabilityExpand}" @click="expand">
         <img :src="getImgUrl('avail.png')" class="my-card-img">
       </div>
     </div>
-    <div class="availability-holder menu-background">
+    <div v-if="availabilityExpand" class="availability-holder menu-background">
       <VueHotelDatepicker
         class="date-picker"
         mobile="mobile"
@@ -29,9 +29,13 @@ export default {
   components: {
     VueHotelDatepicker
   },
+  props: {
+    availabilityExpand: Boolean
+  },
   data: function() {
     return {
-      dateRange: "none"
+      dateRange: "none",
+      expanded: false
     };
   },
   methods: {
@@ -43,6 +47,10 @@ export default {
       var endDate = dr.end;
       // `${startDate} ${endDate}`
       console.log(startDate, endDate);
+    },
+    expand() {
+      this.exapnded = this.availabilityExpand;
+      this.$emit("expanded", [!this.expanded]);
     }
   }
 };
@@ -51,7 +59,6 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .availability-holder {
-  height: 25vh;
   padding: 4vh 0 4vh 0;
   overflow: show;
 }

@@ -1,14 +1,32 @@
 <template>
-<div>
-  <Team88ControlsHeader/>
-  <section class="sidebar">
-    <Team88BudgetControls/>
-    <Team88AvailabilityControls/>
-    <Team88WeatherControls/>
-    <Team88ActivityControls/>
-    <Team88CulinaryControls/>
-    <Team88CrimeControls/>
-  </section>
+  <div>
+    <Team88ControlsHeader/>
+    <section class="sidebar">
+      <Team88BudgetControls
+        :budgetExpand="menuSet.budget"
+        v-on:expanded="expandMenu($event, 'budget')"
+      />
+      <Team88AvailabilityControls
+        :availabilityExpand="menuSet.availability"
+        v-on:expanded="expandMenu($event, 'availability')"
+      />
+      <Team88WeatherControls
+        :weatherExpand="menuSet.weather"
+        v-on:expanded="expandMenu($event, 'weather')"
+      />
+      <Team88ActivityControls
+        :activityExpand="menuSet.activity"
+        v-on:expanded="expandMenu($event, 'activity')"
+      />
+      <Team88CulinaryControls
+        :culinaryExpand="menuSet.culinary"
+        v-on:expanded="expandMenu($event, 'culinary')"
+      />
+      <Team88CrimeControls
+        :crimeExpand="menuSet.crime"
+        v-on:expanded="expandMenu($event, 'crime')"
+      />
+    </section>
   </div>
 </template>
 
@@ -32,26 +50,38 @@ export default {
     Team88ActivityControls,
     Team88CulinaryControls,
     Team88CrimeControls
-
   },
   data: function() {
     return {
-      menus: this.$store.state.menus
+      menuSet: {
+        budget: true,
+        availability: false,
+        weather: false,
+        activity: false,
+        culinary: false,
+        crime: false
+      }
     };
   },
   methods: {
     getImgUrl(pic) {
       return require(`../../assets/${pic}`);
     },
-    clickbutton() {
-      this.$store.dispatch("modCities");
+    expandMenu(setting, menu) {
+      if (setting[0]) {
+        var currentSet = this.menuSet;
+        Object.keys(currentSet).forEach(function(key) {
+          currentSet[key] = false;
+        });
+        currentSet[menu] = setting[0];
+        this.menuSet = currentSet;
+      }
     }
   }
 };
 </script>
 
 <style scoped lang='scss'>
-
 .sidebar {
   height: 35vh;
   width: 100vw;
@@ -78,6 +108,5 @@ export default {
     overflow: auto;
   }
 }
-
 </style>
 

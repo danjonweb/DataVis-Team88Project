@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="menu-header">
-      <div class="menu-title-holder">
+    <div class="menu-header" :class="{active: !crimeExpand}" @click="expand">
+      <div class="menu-title-holder" :class="{active: !crimeExpand}" @click="expand">
         <p class="title-text">Crime</p>
       </div>
-      <div class="img-holder">
+      <div class="img-holder" :class="{active: !crimeExpand}" @click="expand">
         <img :src="getImgUrl('crime.png')" class="my-card-img">
       </div>
     </div>
-    <div class="crime-holder menu-background">
+    <div v-if="crimeExpand" class="crime-holder menu-background">
       <div class="mt-2">Risk Level: {{ crimeValue }}</div>
       <b-input-group size="sm" class="mt-3 crime-slider">
         <b-input-group-prepend>
@@ -35,15 +35,23 @@
 export default {
   name: "Team88CrimeControls",
   components: {},
+  props: {
+    crimeExpand: Boolean
+  },
   data: function() {
     return {
       crimeValue: this.$store.state.crimeRating,
-      colorCode: "outline-success"
+      colorCode: "outline-success",
+      expanded: false
     };
   },
   methods: {
     getImgUrl(pic) {
       return require(`../../assets/${pic}`);
+    },
+    expand() {
+      this.exapnded = this.crimeExpand;
+      this.$emit("expanded", [!this.expanded]);
     }
   },
   watch: {
@@ -63,7 +71,6 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .crime-holder {
-  height: 25vh;
   padding: 4vh 0 4vh 0;
   overflow: auto;
 }

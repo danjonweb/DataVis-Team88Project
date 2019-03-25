@@ -1,14 +1,14 @@
 <template>
   <div >
-    <div class="menu-header">
-      <div class="menu-title-holder">
+    <div class="menu-header" :class="{active: !budgetExpand}" @click="expand">
+      <div class="menu-title-holder" :class="{active: !budgetExpand}" @click="expand">
         <p class="title-text">Budget</p>
       </div>
-      <div class="img-holder">
+      <div class="img-holder" :class="{active: !budgetExpand}" @click="expand">
         <img :src="getImgUrl('budget.png')" class="my-card-img">
       </div>
     </div>
-    <div v-if="true" class="budget-holder menu-background">
+    <div v-if="budgetExpand" class="budget-holder menu-background">
       <b-input-group class="budget-input" size="sm" prepend="Budget per Person">
         <b-input-group-prepend is-text>
           <b>$</b>
@@ -38,9 +38,13 @@
 export default {
   name: "Team88BudgetControls",
   components: {},
+  props: {
+    budgetExpand: Boolean
+  },
   data: function() {
     return {
-      budget: 1000
+      budget: 1000,
+      expanded: true
     };
   },
   methods: {
@@ -50,6 +54,11 @@ export default {
     onChange(e) {
       this.budget = e;
       this.$store.dispatch("setBudgetAction", e);
+    },
+    expand(){
+      
+      this.expanded = this.budgetExpand
+      this.$emit('expanded', [!this.expanded])
     }
   }
 };
@@ -59,7 +68,6 @@ export default {
 @import "../../assets/stylesheets/ControlsMenus.scss";
 
 .budget-holder {
-  height: 25vh;
   padding: 4vh 0 4vh 0;
   overflow: auto;
 }

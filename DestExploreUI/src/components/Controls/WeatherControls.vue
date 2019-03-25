@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="menu-header">
-      <div class="menu-title-holder">
+    <div class="menu-header" :class="{active: !weatherExpand}" @click="expand">
+      <div class="menu-title-holder" :class="{active: !weatherExpand}" @click="expand">
         <p class="title-text">Weather</p>
       </div>
-      <div class="img-holder">
+      <div class="img-holder" :class="{active: !weatherExpand}" @click="expand">
         <img :src="getImgUrl('weather.png')" class="my-card-img">
       </div>
     </div>
-    <div class="weather-holder menu-background">
+    <div v-if="weatherExpand" class="weather-holder menu-background">
       <b-input-group class="temp-box" size="sm">
         <b-input-group-text slot="prepend" class="pre-tag">Ideal Temp (F)</b-input-group-text>
 
@@ -49,11 +49,15 @@
 export default {
   name: "Team88WeatherControls",
   components: {},
+  props: {
+    weatherExpand: Boolean
+  },
   data: function() {
     return {
       idealOn: false,
       tempTol: 15,
-      idealTemp: 72
+      idealTemp: 72,
+      expanded: false
     };
   },
   computed: {
@@ -84,6 +88,10 @@ export default {
     idealTempValueChange(e) {
       this.idealTemp = parseInt(e);
       console.log("Min", this.minTemp, "Max", this.maxTemp);
+    },
+    expand() {
+      this.exapnded = this.weatherExpand;
+      this.$emit("expanded", [!this.expanded]);
     }
   }
 };
@@ -92,7 +100,6 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .weather-holder {
-  height: 25vh;
   padding: 4vh 0 4vh 0;
   overflow: auto;
 }

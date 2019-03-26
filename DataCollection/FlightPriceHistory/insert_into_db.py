@@ -4,7 +4,7 @@ import json
 conn = sqlite3.connect('../cityDB.sqlite')
 c = conn.cursor()
 
-c.execute("""CREATE TABLE flight_price_history (src text, dst text, price_history text)""")
+c.execute("""CREATE TABLE flight_price_history (src text, dst text, month text, price real)""")
 
 mapping = {
     'Jan': '01',
@@ -26,7 +26,7 @@ def convert(d):
     month, year = d['year'].split()
     return {
         "month": year + mapping[month],
-        "prince": d['price']
+        "price": float(d['price'])
     }
 
 
@@ -38,8 +38,19 @@ for l in open('crawled_flight_history.data'):
     data = json.loads(json_str.replace("u'", "'").replace("'", '"'))
     original_chart_data = data['chart_data']
     new_data = [convert(d) for d in original_chart_data]
-    history = json.dumps(new_data)
 
-    c.execute("INSERT INTO flight_price_history VALUES ('{}','{}','{}')".format(src, dst, history))
+
+    month_prices = {}
+    for d in new_data:
+        month, price = d['month'], d['price']
+        if month not in month_prices:
+            month_prices[month] = [price]
+        else:
+            month_prices[month].append(price)
+    for month in month_prices.keys():
+        price_list = month_prices[month]
+        avg = sum(price_list)/len(price_list)
+        #print(src, dst, month, avg)
+        c.execute("INSERT INTO flight_price_history VALUES ('{}','{}','{}','{}')".format(src, dst, month, avg))
 conn.commit()
 conn.close()

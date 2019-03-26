@@ -1,5 +1,19 @@
 <template>
   <section class="visualization">
+    <div style="display: flex;" class="address-input">
+      <b-form-input
+        type="text"
+        v-model="place"
+        placeholder="Enter Starting Zip or Address"
+        aria-label="Text input with checkbox"
+        v-on:keyup.enter="()=>getMore(place)"
+      />
+      <b-button @click="()=>getMore(place)">Set</b-button>
+    </div>
+    <p class="address-text">
+      <strong>Starting Location:</strong>
+      {{local}}
+    </p>
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
       <path stroke="#4FCCEA" fill="none" :d="s()"></path>
@@ -12,6 +26,23 @@
         :cy="location[1]"
         fill="red"
       ></circle>
+
+      <circle
+        v-for="mylat in scaledPlaceLatLon"
+        :key="'homeOuter' + mylat[0]"
+        r="8"
+        :cx="mylat[0]"
+        :cy="mylat[1]"
+        fill="#fff"
+      ></circle>
+      <circle
+        v-for="mylat in scaledPlaceLatLon"
+        :key="'homeInner' + mylat[0]"
+        r="4"
+        :cx="mylat[0]"
+        :cy="mylat[1]"
+        fill="green"
+      ></circle>
     </svg>
   </section>
 </template>
@@ -19,6 +50,7 @@
 <script>
 import * as d3 from "d3";
 // import * as d3geo from "d3-geo";
+import * as axios from "axios";
 import * as topojson from "topojson-client";
 import usmap from "@/assets/us.json";
 
@@ -32,7 +64,13 @@ export default {
   data: function() {
     return {
       s: null,
-      path: null
+      path: null,
+      theKi: "JmtleT1BSXphU3lCRENZR2hkSnRDNEdUMnA3NHBBc0ZtazloV19sX1lDdDQ=",
+      thePrepend: "aHR0cHM6Ly9tYXBzLmdvb2dsZWFwaXMuY29tL21hcHMvYXBpL2dlb2NvZGUvanNvbj9hZGRyZXNzPQ==",
+      place: "",
+      local: "",
+      placeLatLon: [],
+      scaledPlaceLatLon: []
     };
   },
   beforeMount() {
@@ -80,7 +118,29 @@ export default {
 
       this.draw();
     },
+    getMore(zip) {
+      var inputLocation = zip.toString();
+      axios
+        .get(`${atob(this.thePrepend)}${inputLocation}${atob(this.theKi)}`)
+        .then(({ data }) => {
+          this.local = data.results[0].formatted_address;
+          this.placeLatLon = [
+            data.results[0].geometry.location.lng,
+            data.results[0].geometry.location.lat
+          ];
+          this.scaledPlaceLatLon = [this.projection(this.placeLatLon)];
+        })
+        .catch(err => {
+          if (err) {
+            this.local = "INVALID LOCATION";
+          }
+        });
+    },
+
     draw() {
+      if (this.placeLatLon.length > 0) {
+        this.scaledPlaceLatLon = [this.projection(this.placeLatLon)];
+      }
       this.path = d3.geoPath().projection(this.projection);
       this.s = () => this.path(states);
       this.c = () => this.path(nation);
@@ -101,7 +161,6 @@ export default {
 .visualization {
   height: 52vh;
   width: 100vw;
-  min-width: 100vw;
   background-color: rgb(247, 247, 247);
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box; /* Firefox, other Gecko */
@@ -111,9 +170,25 @@ export default {
   overflow: auto;
   box-shadow: inset 10px -10px 8px -9px rgba(15, 12, 1, 0.226);
 }
+
+.address-input {
+  text-align: left;
+  position: absolute;
+  top: 8.5vh;
+  margin: 0 10vw 0 10vw;
+  width: 80vw;
+}
+
+.address-text {
+  margin: 0 10vw 40px 10vw;
+  position: absolute;
+  top: 13.5vh;
+  text-align: left;
+}
+
 .fuller {
   width: 100%;
-  height: 100%;
+  height: 58vh;
 }
 
 @media (orientation: landscape), (min-width: 733px) {
@@ -128,9 +203,28 @@ export default {
     border: 1px solid #000;
     border-top: none;
   }
+
   .fuller {
     width: 100%;
-    height: 100%;
+    height: 90vh;
+  }
+
+  .address-input {
+    text-align: left;
+    position: absolute;
+    top: 8.5vh;
+    left: 0.5vmin;
+    margin: 0 0 0 0;
+    width: 30vw;
+  }
+
+  .address-text {
+    margin: 3px 0 40px 0;
+    text-align: left;
+    position: absolute;
+    top: 13.5vh;
+    left: 0.7vmin;
+    width: 100%;
   }
 }
 </style>

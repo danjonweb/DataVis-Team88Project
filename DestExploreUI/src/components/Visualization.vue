@@ -66,11 +66,13 @@ export default {
       s: null,
       path: null,
       theKi: "JmtleT1BSXphU3lCRENZR2hkSnRDNEdUMnA3NHBBc0ZtazloV19sX1lDdDQ=",
-      thePrepend: "aHR0cHM6Ly9tYXBzLmdvb2dsZWFwaXMuY29tL21hcHMvYXBpL2dlb2NvZGUvanNvbj9hZGRyZXNzPQ==",
+      thePrepend:
+        "aHR0cHM6Ly9tYXBzLmdvb2dsZWFwaXMuY29tL21hcHMvYXBpL2dlb2NvZGUvanNvbj9hZGRyZXNzPQ==",
       place: "",
       local: "",
       placeLatLon: [],
-      scaledPlaceLatLon: []
+      scaledPlaceLatLon: [],
+      daip: "aHR0cDovL2lwaW5mby5pby9qc29uP3Rva2VuPTI5NDE2ZmYzYTM1ZjE0"
     };
   },
   beforeMount() {
@@ -81,7 +83,11 @@ export default {
     this.path = d3.geoPath().projection(this.projection);
     this.s = () => this.path(states);
     this.c = () => this.path(nation);
+
     this.sizeChange();
+  },
+  mounted() {
+    this.getDefaultLocaiton();
   },
   computed: {
     cities() {
@@ -100,6 +106,17 @@ export default {
     }
   },
   methods: {
+    getDefaultLocaiton() {
+      axios.get(atob(this.daip)).then(response => {
+        this.placeLatLon = [
+          Number(response.data.loc.split(",")[1]),
+          Number(response.data.loc.split(",")[0])
+        ];
+        this.local =
+          "IP Default - " + response.data.city + ", " + response.data.region;
+        this.draw();
+      });
+    },
     sizeChange() {
       var ratio = window.innerWidth / window.innerHeight;
       if (ratio < 1.8 && ratio > 1) {
@@ -132,7 +149,7 @@ export default {
         })
         .catch(err => {
           if (err) {
-            this.local = "INVALID LOCATION";
+            this.getDefaultLocaiton();
           }
         });
     },
@@ -184,6 +201,7 @@ export default {
   position: absolute;
   top: 13.5vh;
   text-align: left;
+  width: 100vw;
 }
 
 .fuller {
@@ -224,7 +242,7 @@ export default {
     position: absolute;
     top: 13.5vh;
     left: 0.7vmin;
-    width: 100%;
+    width: 70vw;
   }
 }
 </style>

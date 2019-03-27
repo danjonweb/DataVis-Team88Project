@@ -8,36 +8,38 @@
         <img :src="getImgUrl('Culinary.png')" class="my-card-img">
       </div>
     </div>
-    <div v-if="culinaryExpand" class="culinary-holder menu-background">
-      <b-button
-        id="exPopoverReactive2"
-        :disabled="foodPopoverShow"
-        size="sm"
-        :variant="buttonFill"
-        ref="button"
-      >Select Culinary Preferences</b-button>
-      <div :hidden="!itemsSelected">Culinary Prerences Are Selected</div>
-      <b-popover
-        target="exPopoverReactive2"
-        triggers="click"
-        :show.sync="foodPopoverShow"
-        placement="auto"
-        container="myContainer"
-        ref="popover"
-      >
-        <template slot="title">
-          <b-button @click="onClose" class="close" aria-label="Close">
-            <span class="d-inline-block" aria-hidden="true"> &nbsp; &times; &nbsp;</span>
-          </b-button> <strong>Culinary Selection</strong> 
-        </template>
+    <transition name="expand">
+      <div v-if="culinaryExpand" class="culinary-holder menu-background">
+        <b-button
+          id="exPopoverReactive2"
+          :disabled="foodPopoverShow"
+          :variant="buttonFill"
+          ref="button"
+        >Select Culinary Preferences</b-button>
+        <div :hidden="!itemsSelected">Culinary Prerences Are Selected</div>
+        <b-popover
+          target="exPopoverReactive2"
+          triggers="click"
+          :show.sync="foodPopoverShow"
+          placement="auto"
+          container="myContainer"
+          ref="popover"
+        >
+          <template slot="title">
+            <b-button @click="onClose" class="close" aria-label="Close">
+              <span class="d-inline-block" aria-hidden="true">&nbsp; &times; &nbsp;</span>
+            </b-button>
+            <strong>Culinary Selection</strong>
+          </template>
 
-        <div>
-          <b-form-group label="Culinary Preferences">
-            <b-form-checkbox-group switches v-model="foodSelected" stacked :options="options"/>
-          </b-form-group>
-        </div>
-      </b-popover>
-    </div>
+          <div>
+            <b-form-group label="Culinary Preferences">
+              <b-form-checkbox-group switches v-model="foodSelected" stacked :options="options"/>
+            </b-form-group>
+          </div>
+        </b-popover>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -54,8 +56,8 @@ export default {
       foodPopoverShow: false,
       foodSelected: [], // Must be an array reference!
       options: this.$store.state.culinaryOptions,
-      itemsSelected:false,
-      buttonFill: 'outline-primary',
+      itemsSelected: false,
+      buttonFill: "outline-primary",
       expanded: false
     };
   },
@@ -72,17 +74,16 @@ export default {
     }
   },
   watch: {
-    foodSelected () {
-      if(this.foodSelected.length > 0){
-        this.itemsSelected = true
-        this.buttonFill = 'primary'
-      }else{
-        this.itemsSelected = false
-        this.buttonFill = 'outline-primary'
+    foodSelected() {
+      if (this.foodSelected.length > 0) {
+        this.itemsSelected = true;
+        this.buttonFill = "primary";
+      } else {
+        this.itemsSelected = false;
+        this.buttonFill = "outline-primary";
       }
     }
   }
-
 };
 </script>
 

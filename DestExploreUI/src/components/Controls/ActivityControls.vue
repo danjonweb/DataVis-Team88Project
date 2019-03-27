@@ -8,37 +8,38 @@
         <img :src="getImgUrl('active.png')" class="my-card-img">
       </div>
     </div>
-    <div v-if="activityExpand" class="activity-holder menu-background">
-      <b-button
-        id="exPopoverReactive1"
-        :disabled="popoverShow"
-        size="sm"
-        :variant="buttonFill"
-        ref="button"
-      >Select Activities</b-button>
-      <div :hidden="!itemsSelected">Activities are selected</div>
-      <b-popover
-        target="exPopoverReactive1"
-        triggers="click"
-        :show.sync="popoverShow"
-        placement="auto"
-        container="myContainer"
-        ref="popover"
-      >
-        <template slot="title">
-          <b-button @click="onClose" class="close" aria-label="Close">
-            <span class="d-inline-block" aria-hidden="true">&nbsp; &times; &nbsp;</span>
-          </b-button>
-          <strong>Activity Selection</strong>
-        </template>
+    <transition name="expand">
+      <div v-if="activityExpand" class="activity-holder menu-background">
+        <b-button
+          id="exPopoverReactive1"
+          :disabled="popoverShow"
+          :variant="buttonFill"
+          ref="button"
+        >Select Activities</b-button>
+        <div :hidden="!itemsSelected">Activities are selected</div>
+        <b-popover
+          target="exPopoverReactive1"
+          triggers="click"
+          :show.sync="popoverShow"
+          placement="auto"
+          container="myContainer"
+          ref="popover"
+        >
+          <template slot="title">
+            <b-button @click="onClose" class="close" aria-label="Close">
+              <span class="d-inline-block" aria-hidden="true">&nbsp; &times; &nbsp;</span>
+            </b-button>
+            <strong>Activity Selection</strong>
+          </template>
 
-        <div>
-          <b-form-group label="Activities">
-            <b-form-checkbox-group switches v-model="selected" stacked :options="options"/>
-          </b-form-group>
-        </div>
-      </b-popover>
-    </div>
+          <div>
+            <b-form-group label="Activities">
+              <b-form-checkbox-group switches v-model="selected" stacked :options="options"/>
+            </b-form-group>
+          </div>
+        </b-popover>
+      </div>
+    </transition>
   </div>
 </template>
 

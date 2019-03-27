@@ -8,16 +8,29 @@
         <img :src="getImgUrl('avail.png')" class="my-card-img">
       </div>
     </div>
-    <div v-if="availabilityExpand" class="availability-holder menu-background">
-      <VueHotelDatepicker
-        class="date-picker"
-        mobile="mobile"
-        :value="dateRange"
-        v-on:update="changeDateRange($event)"
-        v-on:reset="changeDateRange('reset')"
-        v-on:close="changeDateRange('close')"
-      />
-    </div>
+    <transition name="expand">
+      <div v-if="availabilityExpand" class="availability-holder menu-background">
+        <VueHotelDatepicker
+          class="date-picker"
+          mobile="mobile"
+          :value="dateRange"
+          v-on:update="changeDateRange($event)"
+          v-on:reset="changeDateRange('reset')"
+          v-on:close="changeDateRange('close')"
+        />
+        <b-input-group class="dur-box">
+          <b-input-group-text slot="prepend" class="pre-tag">Trip Duration (days)</b-input-group-text>
+
+          <b-form-input
+            type="number"
+            :disabled="false"
+            :value="tripDuration"
+            v-on:change="tripDurationChange($event)"
+            aria-label="Text input with checkbox"
+          />
+        </b-input-group>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -35,7 +48,8 @@ export default {
   data: function() {
     return {
       dateRange: "none",
-      expanded: false
+      expanded: false,
+      tripDuration: 3
     };
   },
   methods: {
@@ -51,6 +65,9 @@ export default {
     expand() {
       this.exapnded = this.availabilityExpand;
       this.$emit("expanded", [!this.expanded]);
+    },
+    tripDurationChange(dur) {
+      this.tripDuration = dur;
     }
   }
 };
@@ -61,5 +78,12 @@ export default {
 .availability-holder {
   padding: 4vh 0 4vh 0;
   overflow: show;
+}
+
+.dur-box {
+  margin: 1vh;
+  margin-top: 4vh;
+  width: 96%;
+  font-size: 5px;
 }
 </style>

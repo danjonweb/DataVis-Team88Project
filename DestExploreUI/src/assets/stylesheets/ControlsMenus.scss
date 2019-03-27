@@ -1,9 +1,9 @@
 .menu-hold {
     height: 22vh;
     background-color: rgb(243, 243, 243);
-  }
-  
-  .menu-header {
+}
+
+.menu-header {
     width: 100%;
     height: 25%;
     margin: 0;
@@ -15,49 +15,94 @@
     z-index: 100;
     overflow: auto;
     border-bottom: 1px solid rgb(77, 77, 77);
+
     &.active {
-      cursor: pointer;
+        cursor: pointer;
     }
-  }
-  
-  .img-holder {
+}
+
+.img-holder {
     width: 20%;
     height: 5vh;
     padding: 0;
     margin: 0;
+
     &.active {
-      cursor: pointer;
+        cursor: pointer;
     }
-  }
-  .menu-title-holder {
+}
+
+.menu-title-holder {
     text-align: left;
     height: 20%;
     width: 80%;
+
     &.active {
-      cursor: pointer;
+        cursor: pointer;
     }
-  }
-  .title-text {
+}
+
+.title-text {
     padding-left: 3px;
     margin-bottom: 0;
     font-size: calc(12px + 0.9vh);
-  }
-  
-  .my-card-img {
+}
+
+.my-card-img {
     padding: 0;
     margin: 0;
     height: 90%;
-  }
-  
+}
 
-  .menu-background {
+
+.menu-background {
     background-color: rgb(219, 219, 219);
     height: 23vh;
-  }
+}
 
-  @media (orientation: landscape), (min-width: 733px) {
-    .menu-background {
-      background-color: rgb(219, 219, 219);
-      height: 54.2vh;
+.expand-enter-active {
+    animation: expand-in .3s;
+}
+
+.expand-leave-active {
+    animation: expand-in .3s reverse;
+}
+
+@keyframes expand-in {
+    0% {
+        height: 0vh;
     }
-  }
+
+    100% {
+        height: 23vh;
+    }
+}
+
+@media (orientation: landscape),
+(min-width: 733px) {
+    .menu-background {
+        background-color: rgb(219, 219, 219);
+        height: 54.2vh;
+    }
+
+
+    .expand-enter-active {
+        animation: expand-in .3s;
+        animation-timing-function: ease-out;
+    }
+
+    .expand-leave-active {
+        animation: expand-in .3s reverse;
+        animation-timing-function: ease-out;
+    }
+
+    @keyframes expand-in {
+        0% {
+            height: 0vh;
+        }
+
+        100% {
+            height: 54.2vh;
+        }
+    }
+}

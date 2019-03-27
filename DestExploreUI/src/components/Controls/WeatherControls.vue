@@ -8,39 +8,66 @@
         <img :src="getImgUrl('weather.png')" class="my-card-img">
       </div>
     </div>
-    <div v-if="weatherExpand" class="weather-holder menu-background">
-      <b-input-group class="temp-box" size="sm">
-        <b-input-group-text slot="prepend" class="pre-tag">Ideal Temp (F)</b-input-group-text>
+    <transition name="expand">
+      <div v-if="weatherExpand" class="weather-holder menu-background">
+        <div v-if="simple">
+          <b-input-group class="toggle-weather" prepend="Enable">
+            <b-input-group-prepend is-text>
+              <input
+                type="checkbox"
+                :checked="idealOn"
+                v-on:change="idealChange()"
+                aria-label="Checkbox for following text input"
+              >
+            </b-input-group-prepend>
+          </b-input-group>
 
-        <b-input-group-prepend is-text>
-          <input
-            type="checkbox"
-            :checked="idealOn"
-            v-on:change="idealChange()"
-            aria-label="Checkbox for following text input"
-          >
-        </b-input-group-prepend>
-        <b-form-input
-          type="number"
-          :disabled="!idealOn"
-          :value="idealTemp"
-          v-on:change="idealTempValueChange($event)"
-          aria-label="Text input with checkbox"
-        />
-      </b-input-group>
+          <b-button-group class="weather-buttons">
+            <b-button :disabled="!idealOn" variant="outline-primary">Cool</b-button>
+            <b-button :disabled="!idealOn" variant="outline-secondary">Mild</b-button>
+            <b-button :disabled="!idealOn" variant="outline-danger">Warm</b-button>
+          </b-button-group>
 
-      <b-input-group class="temp-box" size="sm">
-        <b-input-group-text slot="prepend" class="pre-tag">+/- Tolerance (F)</b-input-group-text>
+          <div class="simp-adv-toggle">
+            <b-button @click="setAdvanced">Advanced Selection</b-button>
+          </div>
+        </div>
+        <div v-else>
+          <b-input-group class="temp-box">
+            <b-input-group-text slot="prepend" class="pre-tag">Ideal Temp (F)</b-input-group-text>
 
-        <b-form-input
-          type="number"
-          :disabled="!idealOn"
-          :value="tempTol"
-          v-on:change="tempTolValueChange($event)"
-          aria-label="Text input with checkbox"
-        />
-      </b-input-group>
-    </div>
+            <b-input-group-prepend is-text>
+              <input
+                type="checkbox"
+                :checked="idealOn"
+                v-on:change="idealChange()"
+                aria-label="Checkbox for following text input"
+              >
+            </b-input-group-prepend>
+            <b-form-input
+              type="number"
+              :disabled="!idealOn"
+              :value="idealTemp"
+              v-on:change="idealTempValueChange($event)"
+              aria-label="Text input with checkbox"
+            />
+          </b-input-group>
+
+          <b-input-group class="temp-box">
+            <b-input-group-text slot="prepend" class="pre-tag">+/- Tolerance (F)</b-input-group-text>
+
+            <b-form-input
+              type="number"
+              :disabled="!idealOn"
+              :value="tempTol"
+              v-on:change="tempTolValueChange($event)"
+              aria-label="Text input with checkbox"
+            />
+          </b-input-group>
+          <b-button class="simp-adv-toggle" @click="setAdvanced">Simple Selection</b-button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -57,7 +84,8 @@ export default {
       idealOn: false,
       tempTol: 15,
       idealTemp: 72,
-      expanded: false
+      expanded: false,
+      simple: true
     };
   },
   computed: {
@@ -92,6 +120,9 @@ export default {
     expand() {
       this.exapnded = this.weatherExpand;
       this.$emit("expanded", [!this.expanded]);
+    },
+    setAdvanced() {
+      this.simple = !this.simple;
     }
   }
 };
@@ -100,17 +131,35 @@ export default {
 <style scoped lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .weather-holder {
-  padding: 4vh 0 4vh 0;
+  padding: 1vh 0 4vh 0;
   overflow: auto;
 }
+
+.toggle-weather {
+  width: 25vw;
+  padding-top: 0;
+  margin-left: 5px;
+  margin-bottom: 3vh;
+}
+
+.weather-buttons {
+  width: 25vw;
+  min-width: 280px;
+}
+
 .temp-box {
   margin: 1vh;
-  margin-top: 2vh;
+  margin-top: 0vh;
   width: 96%;
   font-size: 5px;
 }
+
 .pre-tag {
   width: 50vw;
+}
+
+.simp-adv-toggle {
+  margin-top: 4vh;
 }
 
 @media (orientation: landscape), (min-width: 733px) {

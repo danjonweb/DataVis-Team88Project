@@ -136,7 +136,7 @@ export default {
 }
 
 .toggle-weather {
-  width: 25vw;
+  width: 95%;
   padding-top: 0;
   margin-left: 5px;
   margin-bottom: 3vh;

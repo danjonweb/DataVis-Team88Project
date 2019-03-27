@@ -102,7 +102,7 @@ export default {
 .toggle-airline {
   margin: 1vh;
   margin-top: 2vh;
-  width: 25vw;
+  width: 95%;
 }
 </style>
 

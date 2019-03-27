@@ -10,7 +10,10 @@
     </div>
     <transition name="expand">
       <div v-if="crimeExpand" class="crime-holder menu-background">
-        <div class="mt-2 c-index">Low Crime Priority Index: <strong>{{ crimeValue }}</strong> </div>
+        <div class="mt-2 c-index">
+          Low Crime Priority Index:
+          <strong>{{ crimeValue }}</strong>
+        </div>
         <b-input-group size="sm" class="mt-3 crime-slider">
           <b-input-group-prepend>
             <b-button size="sm" class="no-hov" :variant="colorCode">0</b-button>

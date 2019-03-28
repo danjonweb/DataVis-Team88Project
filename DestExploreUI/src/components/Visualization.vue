@@ -30,18 +30,18 @@
       <circle
         v-for="mylat in scaledPlaceLatLon"
         :key="'homeOuter' + mylat[0]"
-        r="8"
+        r="12"
         :cx="mylat[0]"
         :cy="mylat[1]"
-        fill="#fff"
+        fill="#000"
       ></circle>
       <circle
         v-for="mylat in scaledPlaceLatLon"
         :key="'homeInner' + mylat[0]"
-        r="4"
+        r="6"
         :cx="mylat[0]"
         :cy="mylat[1]"
-        fill="green"
+        fill="#28f3d8"
       ></circle>
     </svg>
   </section>

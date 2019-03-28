@@ -39,7 +39,7 @@ export default {
   data: function() {
     return {
       crimeValue: this.$store.state.crimeRating,
-      colorCode: "outline-success",
+      colorCode: "outline-dark",
       expanded: false
     };
   },

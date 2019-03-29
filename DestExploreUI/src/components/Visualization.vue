@@ -53,6 +53,8 @@ import * as d3 from "d3";
 import * as axios from "axios";
 import * as topojson from "topojson-client";
 import usmap from "@/assets/us.json";
+import {printSomeStuff, printLogo } from "@/components/SampleHelperFucntions"
+
 
 // console.log(usmap)
 const states = topojson.feature(usmap, usmap.objects.states);
@@ -85,6 +87,8 @@ export default {
     this.c = () => this.path(nation);
 
     this.sizeChange();
+    printSomeStuff('HEY HEY HEY....  This is something to print TO CONSOLE !!!!!')
+    printLogo()
   },
   mounted() {
     this.getDefaultLocaiton();

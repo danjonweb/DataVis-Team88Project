@@ -1,80 +1,11 @@
 <template>
   <el-collapse-item title="Weather" name="3">
-    <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
-    <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+    <el-button-group>
+      <el-button type="primary">Cool</el-button>
+      <el-button type="info">Mild</el-button>
+      <el-button type="danger">Warm</el-button>
+    </el-button-group>
   </el-collapse-item>
-  <!--
-  <div>
-    <div class="menu-header" :class="{active: !weatherExpand}" @click="expand">
-      <div class="menu-title-holder" :class="{active: !weatherExpand}" @click="expand">
-        <p class="title-text">Weather</p>
-      </div>
-      <div class="img-holder" :class="{active: !weatherExpand}" @click="expand">
-        <img :src="getImgUrl('weather.png')" class="my-card-img">
-      </div>
-    </div>
-    <transition name="expand">
-      <div v-if="weatherExpand" class="weather-holder menu-background">
-        <div v-if="simple">
-          <b-input-group class="toggle-weather" prepend="Enable">
-            <b-input-group-prepend is-text>
-              <input
-                type="checkbox"
-                :checked="idealOn"
-                v-on:change="idealChange()"
-                aria-label="Checkbox for following text input"
-              >
-            </b-input-group-prepend>
-          </b-input-group>
-
-          <b-button-group class="weather-buttons">
-            <b-button :disabled="!idealOn" variant="outline-primary">Cool</b-button>
-            <b-button :disabled="!idealOn" variant="outline-secondary">Mild</b-button>
-            <b-button :disabled="!idealOn" variant="outline-danger">Warm</b-button>
-          </b-button-group>
-
-          <div class="simp-adv-toggle">
-            <b-button @click="setAdvanced">Advanced Selection</b-button>
-          </div>
-        </div>
-        <div v-else>
-          <b-input-group class="temp-box">
-            <b-input-group-text slot="prepend" class="pre-tag">Ideal Temp (F)</b-input-group-text>
-
-            <b-input-group-prepend is-text>
-              <input
-                type="checkbox"
-                :checked="idealOn"
-                v-on:change="idealChange()"
-                aria-label="Checkbox for following text input"
-              >
-            </b-input-group-prepend>
-            <b-form-input
-              type="number"
-              :disabled="!idealOn"
-              :value="idealTemp"
-              v-on:change="idealTempValueChange($event)"
-              aria-label="Text input with checkbox"
-            />
-          </b-input-group>
-
-          <b-input-group class="temp-box">
-            <b-input-group-text slot="prepend" class="pre-tag">+/- Tolerance (F)</b-input-group-text>
-
-            <b-form-input
-              type="number"
-              :disabled="!idealOn"
-              :value="tempTol"
-              v-on:change="tempTolValueChange($event)"
-              aria-label="Text input with checkbox"
-            />
-          </b-input-group>
-          <b-button class="simp-adv-toggle" @click="setAdvanced">Simple Selection</b-button>
-        </div>
-      </div>
-    </transition>
-  </div>
--->
 </template>
 
 <script>
@@ -82,9 +13,6 @@
 export default {
   name: "Team88WeatherControls",
   components: {},
-  props: {
-    weatherExpand: Boolean
-  },
   data: function() {
     return {
       idealOn: false,

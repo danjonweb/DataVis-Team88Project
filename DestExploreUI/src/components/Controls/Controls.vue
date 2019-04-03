@@ -53,7 +53,7 @@ export default {
   },
   data: function() {
     return {
-      activeName: "0",
+      activeName: "1",
       menuSet: {
         budget: true,
         availability: false,

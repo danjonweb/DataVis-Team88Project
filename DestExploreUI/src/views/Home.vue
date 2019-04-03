@@ -21,8 +21,6 @@ export default {
 </script>
 
 <style lang='scss'>
-.el-menu-item.is-active {
-  border-bottom: 2px solid #00cef6 !important;
-}
+
 </style>
 

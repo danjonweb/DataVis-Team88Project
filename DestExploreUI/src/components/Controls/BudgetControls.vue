@@ -1,54 +1,19 @@
 <template>
-  <el-collapse-item title="Budget" name="1">
-    <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
-    <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
-  </el-collapse-item>
-<!--
-  <div>
-    <div class="menu-header" :class="{active: !budgetExpand}" @click="expand">
-      <div class="menu-title-holder" :class="{active: !budgetExpand}" @click="expand">
-        <p class="title-text">Budget</p>
-      </div>
-      <div class="img-holder" :class="{active: !budgetExpand}" @click="expand">
-        <img :src="getImgUrl('budget.png')" class="my-card-img">
-      </div>
-    </div>
-    <transition name="expand">
-      <div v-if="budgetExpand" class="budget-holder menu-background">
-        <b-input-group class="budget-input" prepend="Budget per Person">
-          <b-input-group-prepend is-text>
-            <b>$</b>
-          </b-input-group-prepend>
-          <b-form-input
-            type="number"
-            :value="budget"
-            v-on:change="onChange($event)"
-            aria-label="Text input with checkbox"
-          />
-        </b-input-group>
-        <b-input-group prepend="0" append="5000" class="mt-3 budget-slider">
-          <b-form-input
-            :value="budget"
-            v-on:change="onChange($event)"
-            type="range"
-            min="0"
-            max="5000"
-          />
-        </b-input-group>
-        <b-input-group class="toggle-airline" prepend="Disable Airline Travel">
-          <b-input-group-prepend is-text>
-            <input
-              type="checkbox"
-              :checked="airlineDisable"
-              v-on:change="airDisableChange()"
-              aria-label="Checkbox for following text input"
-            >
-          </b-input-group-prepend>
-        </b-input-group>
-      </div>
-    </transition>
-  </div>
--->
+<el-collapse-item title="Budget" name="1">
+  <el-row>
+    <el-col>
+      <el-input placeholder="" v-model="budget">
+        <template slot="prepend">$</template>
+        <template slot="append">each</template>
+      </el-input>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col>
+    <el-checkbox v-model="airlineDisable">Disable airline travel</el-checkbox>
+    </el-col>
+  </el-row>
+</el-collapse-item>
 </template>
 
 <script>
@@ -56,13 +21,9 @@
 export default {
   name: "Team88BudgetControls",
   components: {},
-  props: {
-    budgetExpand: Boolean
-  },
   data: function() {
     return {
       budget: 1000,
-      expanded: true,
       airlineDisable: false
     };
   },
@@ -86,6 +47,11 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
 </style>
 

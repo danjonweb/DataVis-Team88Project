@@ -43,34 +43,31 @@ function findClosestAirports(origin, airports, nAirports, radius) {
     // Initialize an array to hold the distance with each airport
     var airportDistance = []
 
-    // Extract coordinates of each airport
-    var airportCoordinates = airports.map(function(x) {return x.coordinates;})
-
     // Get the distance with each airport coordinates
-    airportCoordinates.forEach(element => {
-        airportDistance.push({'airportCoordinates': element,
+    airports.forEach(element => {
+        airportDistance.push({'airportCoordinates': [element.latitude, element.longitude],
+                              'airportCode': element.iata_code,
                               'distance': haversineDistance(origin, element, true)
             });
     });
+    
+    // Check if any airport is within the radius
+    if(airportDistance.some(function(element) {return element.distance <= radius;})) {
+      // Only keep the airports within the radius
+      var closeAirports = airportDistance.filter(function(airport) {return airport.distance <= radius;})
 
-    // Extract the n closest airports
-    var closestAirports = airportDistance.sort(sortAirports).slice(0, nAirports);
+      // Keep n airports
+      var closestAirports = closeAirports.sort(sortAirports).slice(0, nAirports);
+    } else {
+      // Sort the airports based on their distance and keep the closest one
+      var closestAirports = airportDistance.sort(sortAirports)[0];
+    }
 
-    // Check the distance is less than the desired radius
-    // Return if less than radius
-    // If nothing within the radius, return the closest one
+    // Extract the airport codes
+    var closestAirportCodes = []
+    
+    closestAirports.forEach(function(x) {closestAirportCodes.append(x.airportCode);})
+    
+    return closestAirports
 
-    // // Check the distance is less than the desired radius
-    // closest_airports_radius = [u for u, v in closest_airports if v <= radius]
-
-    // // Get the airport codes for all the coordinates in the list
-    // airport_codes = []
-    // for close_airport in closest_airports_radius:
-    //     airport_codes.append(airport_df.loc[airport_df.coordinates == close_airport, 'iata_code'].values[0])
-
-    // if len(airport_codes) < n_airports:
-    //     return(airport_codes + (n_airports - len(airport_codes)) * [''])
-
-    // else:
-    //     return airport_codes
 }

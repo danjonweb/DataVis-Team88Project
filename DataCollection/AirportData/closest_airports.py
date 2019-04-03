@@ -3,6 +3,8 @@ import sqlite3
 import pandas as pd
 import find_closest_airport
 
+conn = sqlite3.connect('../cityDB.sqlite')
+
 # Read in the information about the airports
 airport_info = pd.read_csv('airports_info.txt', names=['openflights_airport_id', 'name', 'city', 'country',
                                                          'iata_code', 'icao_code', 'latitude',
@@ -12,8 +14,11 @@ airport_info = pd.read_csv('airports_info.txt', names=['openflights_airport_id',
 # Create a tuple holding the latitude and longitude of the airport
 airport_info['coordinates'] = airport_info.apply(lambda x: (x.latitude, x.longitude), axis=1)
 
+# Save this to SQLite database
+airport_info[['name', 'city', 'country', 'iata_code','latitude', 'longitude']].to_sql('airport_info', 
+                                                                conn, if_exists='replace', index=False)
+
 # Read in city information
-conn = sqlite3.connect('../cityDB.sqlite')
 cities_info = pd.read_sql_query("SELECT cid, city, state, lat, lng  FROM cities;", conn)
 cities_info['coordinates'] = cities_info.apply(lambda x: (x['lat'], x['lng']), axis=1)
 

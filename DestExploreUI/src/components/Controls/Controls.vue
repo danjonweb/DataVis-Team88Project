@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <el-card>
     <Team88ControlsHeader/>
-    <section class="sidebar">
+    <el-collapse v-model="activeName" accordion>
       <Team88BudgetControls
         :budgetExpand="menuSet.budget"
         v-on:expanded="expandMenu($event, 'budget')"
@@ -26,8 +26,8 @@
         :crimeExpand="menuSet.crime"
         v-on:expanded="expandMenu($event, 'crime')"
       />
-    </section>
-  </div>
+    </el-collapse>
+  </el-card>
 </template>
 
 <script>
@@ -53,6 +53,7 @@ export default {
   },
   data: function() {
     return {
+      activeName: "0",
       menuSet: {
         budget: true,
         availability: false,
@@ -82,31 +83,6 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-.sidebar {
-  height: 35vh;
-  width: 100vw;
-  min-width: 300px;
-  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box; /* Firefox, other Gecko */
-  box-sizing: border-box;
-  border: 1px solid #000;
-  border-top: none;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
 
-@media (orientation: landscape), (min-width: 733px) {
-  .sidebar {
-    height: 87vh;
-    width: 30vw;
-    min-width: 300px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    border-top: none;
-    overflow: auto;
-  }
-}
 </style>
 

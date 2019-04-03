@@ -1,4 +1,9 @@
 <template>
+  <el-collapse-item title="Weather" name="3">
+    <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
+    <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+  </el-collapse-item>
+  <!--
   <div>
     <div class="menu-header" :class="{active: !weatherExpand}" @click="expand">
       <div class="menu-title-holder" :class="{active: !weatherExpand}" @click="expand">
@@ -69,6 +74,7 @@
       </div>
     </transition>
   </div>
+-->
 </template>
 
 <script>
@@ -129,42 +135,5 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-@import "../../assets/stylesheets/ControlsMenus.scss";
-.weather-holder {
-  padding: 1vh 0 4vh 0;
-  overflow: auto;
-}
 
-.toggle-weather {
-  width: 95%;
-  padding-top: 0;
-  margin-left: 5px;
-  margin-bottom: 3vh;
-}
-
-.weather-buttons {
-  width: 25vw;
-  min-width: 280px;
-}
-
-.temp-box {
-  margin: 1vh;
-  margin-top: 0vh;
-  width: 96%;
-  font-size: 5px;
-}
-
-.pre-tag {
-  width: 50vw;
-}
-
-.simp-adv-toggle {
-  margin-top: 4vh;
-}
-
-@media (orientation: landscape), (min-width: 733px) {
-  .pre-tag {
-    width: 14vw;
-  }
-}
 </style>

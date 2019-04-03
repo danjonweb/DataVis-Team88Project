@@ -9,6 +9,8 @@ export default new Vuex.Store({
     budget: 1000,
 
     selectedActivities: [],
+    
+    inputLocation: null,
 
     activityOptions: [
       { text: "Backpacking", value: "backpacking", disabled: false },
@@ -242,14 +244,14 @@ export default new Vuex.Store({
     showHideAboutMutation(state, payload) {
       state.showAbout = payload;
     },
-
     modCitiesMutate(state) {
       state.cities.pop()
-
     },
-
     setBudgetMutation(state, payload) {
       state.budget = payload
+    },
+    setInputLocationMutation(state, payload) {
+      state.inputLocation = payload;
     }
   },
   actions: {
@@ -262,5 +264,8 @@ export default new Vuex.Store({
     setBudgetAction(context, payload) {
       context.commit('setBudgetMutation', payload);
     },
+    setInputLocation(context, payload) {
+      context.commit('setInputLocationMutation', payload);
+    }
   },
 });

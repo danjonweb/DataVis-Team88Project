@@ -1,50 +1,8 @@
 <template>
-  <section class="visualization">
-    <div style="display: flex;" class="address-input">
-      <b-form-input
-        type="text"
-        v-model="place"
-        placeholder="Enter Starting Zip or Address"
-        aria-label="Text input with checkbox"
-        v-on:keyup.enter="()=>getMore(place)"
-      />
-      <b-button @click="()=>getMore(place)">Set</b-button>
-    </div>
-    <p class="address-text">
-      <strong>Starting Location:</strong>
-      {{local}}
-    </p>
-    <svg class="fuller">
-      <path fill="#888" :d="c()"></path>
-      <path stroke="#4FCCEA" fill="none" :d="s()"></path>
-
-      <circle
-        v-for="location in locations"
-        :key="location[0].toString()"
-        r="7"
-        :cx="location[0]"
-        :cy="location[1]"
-        fill="red"
-      ></circle>
-
-      <circle
-        v-for="mylat in scaledPlaceLatLon"
-        :key="'homeOuter' + mylat[0]"
-        r="12"
-        :cx="mylat[0]"
-        :cy="mylat[1]"
-        fill="#000"
-      ></circle>
-      <circle
-        v-for="mylat in scaledPlaceLatLon"
-        :key="'homeInner' + mylat[0]"
-        r="6"
-        :cx="mylat[0]"
-        :cy="mylat[1]"
-        fill="#28f3d8"
-      ></circle>
-    </svg>
-  </section>
+  <el-main>
+    <div id="map" class="map"></div>
+    <Team88Controls/>
+  </el-main>
 </template>
 
 <script>
@@ -54,7 +12,8 @@ import * as axios from "axios";
 import * as topojson from "topojson-client";
 import usmap from "@/assets/us.json";
 import {printSomeStuff, printLogo } from "@/components/SampleHelperFucntions"
-
+import {LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import Team88Controls from "@/components/Controls/Controls.vue";
 
 // console.log(usmap)
 const states = topojson.feature(usmap, usmap.objects.states);
@@ -62,36 +21,23 @@ const nation = topojson.feature(usmap, usmap.objects.land);
 
 export default {
   name: "Team88Visual",
-  components: {},
+  components: {
+    Team88Controls
+  },
   data: function() {
     return {
-      s: null,
-      path: null,
-      theKi: "JmtleT1BSXphU3lCRENZR2hkSnRDNEdUMnA3NHBBc0ZtazloV19sX1lDdDQ=",
-      thePrepend:
-        "aHR0cHM6Ly9tYXBzLmdvb2dsZWFwaXMuY29tL21hcHMvYXBpL2dlb2NvZGUvanNvbj9hZGRyZXNzPQ==",
-      place: "",
-      local: "",
-      placeLatLon: [],
-      scaledPlaceLatLon: [],
-      daip: "aHR0cDovL2lwaW5mby5pby9qc29uP3Rva2VuPTI5NDE2ZmYzYTM1ZjE0"
+      map: null,
+      tileLayer: null,
+      layers: [],
+      svg: null
     };
   },
   beforeMount() {
-    d3.select(window).on("resize", this.sizeChange);
-
-    this.projection = d3.geoAlbersUsa();
-
-    this.path = d3.geoPath().projection(this.projection);
-    this.s = () => this.path(states);
-    this.c = () => this.path(nation);
-
-    this.sizeChange();
-    printSomeStuff('HEY HEY HEY....  This is something to print TO CONSOLE !!!!!')
-    printLogo()
+    
   },
   mounted() {
-    this.getDefaultLocaiton();
+    this.initMap();
+    this.initLayers();
   },
   computed: {
     cities() {
@@ -99,155 +45,144 @@ export default {
     },
     budget() {
       return this.$store.state.budget;
+    },
+    inputLocation() {
+      return this.$store.state.inputLocation;
     }
   },
   watch: {
     cities() {
-      this.draw();
+      
     },
     budget() {
-      this.draw();
+      
+    },
+    inputLocation() {
+      let map = this.map
+      let loc = [this.$store.state.inputLocation[0], this.$store.state.inputLocation[1]]
+      
+      d3.select("#my-loc")
+        .attr("cx", map.latLngToLayerPoint([loc[0], loc[1]]).x)
+        .attr("cy", map.latLngToLayerPoint([loc[0], loc[1]]).y)
+        .attr("opacity", 1)
     }
   },
   methods: {
-    getDefaultLocaiton() {
-      axios.get(atob(this.daip)).then(response => {
-        this.placeLatLon = [
-          Number(response.data.loc.split(",")[1]),
-          Number(response.data.loc.split(",")[0])
-        ];
-        this.local =
-          "IP Default - " + response.data.city + ", " + response.data.region;
-        this.draw();
-      });
+    initMap() {
+      let map = L.map('map').setView([39.82, -98.58], 4);
+      this.map = map;
+      this.tileLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+      	attribution: '',
+      	subdomains: 'abcd',
+      	minZoom: 0,
+      	maxZoom: 20,
+      	ext: 'png'
+      }).addTo(this.map);
+      L.svg().addTo(this.map);
+      
+      d3.select("#map")
+        .select("svg")
+        .append("circle")
+          .attr("id", "my-loc")
+          .attr("r", 8)
+          .style("fill", "#aff000")
+          .attr("stroke", "#aff000")
+          .attr("stroke-width", 3)
+          .attr("fill-opacity", .4)
+          .attr("opacity", 0)
     },
-    sizeChange() {
-      var ratio = window.innerWidth / window.innerHeight;
-      if (ratio < 1.8 && ratio > 1) {
-        this.projection
-          .scale(0.9 * window.innerWidth)
-          .translate([window.innerWidth / 2.8, window.innerHeight / 2.2]);
-      } else if (window.innerWidth >= 733) {
-        this.projection
-          .scale(0.9 * window.innerWidth)
-          .translate([window.innerWidth / 2.8, window.innerHeight / 2.2]);
-      } else {
-        this.projection
-          .scale(1.3 * window.innerWidth)
-          .translate([window.innerWidth / 2, window.innerHeight / 3.5]);
-      }
-
-      this.draw();
-    },
-    getMore(zip) {
-      var inputLocation = zip.toString();
-      axios
-        .get(`${atob(this.thePrepend)}${inputLocation}${atob(this.theKi)}`)
-        .then(({ data }) => {
-          this.local = data.results[0].formatted_address;
-          this.placeLatLon = [
-            data.results[0].geometry.location.lng,
-            data.results[0].geometry.location.lat
-          ];
-          this.scaledPlaceLatLon = [this.projection(this.placeLatLon)];
-        })
-        .catch(err => {
-          if (err) {
-            this.getDefaultLocaiton();
-          }
-        });
-    },
-
-    draw() {
-      if (this.placeLatLon.length > 0) {
-        this.scaledPlaceLatLon = [this.projection(this.placeLatLon)];
-      }
-      this.path = d3.geoPath().projection(this.projection);
-      this.s = () => this.path(states);
-      this.c = () => this.path(nation);
-      // insert algo here
-      this.locations = [];
-      this.cities.forEach(city => {
-        if (city.cost <= this.budget) {
-          var coords = this.projection([city.lon, city.lat]);
-          this.locations.push(coords);
-        }
-      });
+    initLayers() {
+      
     }
   }
 };
 </script>
 
 <style scoped lang='scss'>
-.visualization {
-  height: 52vh;
-  width: 100vw;
-  background-color: rgb(247, 247, 247);
-  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box; /* Firefox, other Gecko */
-  box-sizing: border-box;
-  border: 1px solid #000;
-  border-top: none;
-  overflow: auto;
-  box-shadow: inset 10px -10px 8px -9px rgba(15, 12, 1, 0.226);
-}
-
-.address-input {
-  text-align: left;
-  position: absolute;
-  top: 8.5vh;
-  margin: 0 10vw 0 10vw;
-  width: 80vw;
-}
-
-.address-text {
-  margin: 0 10vw 40px 10vw;
-  position: absolute;
-  top: 13.5vh;
-  text-align: left;
-  width: 100vw;
-}
-
-.fuller {
+#map {
   width: 100%;
-  height: 58vh;
+  height: calc(100vh - 101px);
+}
+.el-card {
+  position: absolute;
+  width: 300px;
+  top: 100px;
+  right: 40px;
+  opacity: 0.9;
+  z-index: 1000;
 }
 
-@media (orientation: landscape), (min-width: 733px) {
-  .visualization {
-    width: 70vw;
-    height: 92vh;
-    min-width: 580px;
-    background-color: rgb(247, 247, 247);
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box; /* Firefox, other Gecko */
-    box-sizing: border-box;
-    border: 1px solid #000;
-    border-top: none;
-  }
 
-  .fuller {
-    width: 100%;
-    height: 90vh;
-  }
-
-  .address-input {
-    text-align: left;
-    position: absolute;
-    top: 8.5vh;
-    left: 0.5vmin;
-    margin: 0 0 0 0;
-    width: 30vw;
-  }
-
-  .address-text {
-    margin: 3px 0 40px 0;
-    text-align: left;
-    position: absolute;
-    top: 13.5vh;
-    left: 0.7vmin;
-    width: 70vw;
-  }
-}
 </style>
 
+
+<!--
+
+<div style="display: flex;" class="address-input">
+  <b-form-input
+    type="text"
+    v-model="place"
+    placeholder="Enter Starting Zip or Address"
+    aria-label="Text input with checkbox"
+    v-on:keyup.enter="()=>getMore(place)"
+  />
+  <b-button @click="()=>getMore(place)">Set</b-button>
+</div>
+<p class="address-text">
+  <strong>Starting Location:</strong>
+  {{local}}
+</p>
+<svg class="fuller">
+  <path fill="#888" :d="c()"></path>
+  <path stroke="#4FCCEA" fill="none" :d="s()"></path>
+
+  <circle
+    v-for="location in locations"
+    :key="location[0].toString()"
+    r="7"
+    :cx="location[0]"
+    :cy="location[1]"
+    fill="red"
+  ></circle>
+
+  <circle
+    v-for="mylat in scaledPlaceLatLon"
+    :key="'homeOuter' + mylat[0]"
+    r="12"
+    :cx="mylat[0]"
+    :cy="mylat[1]"
+    fill="#000"
+  ></circle>
+  <circle
+    v-for="mylat in scaledPlaceLatLon"
+    :key="'homeInner' + mylat[0]"
+    r="6"
+    :cx="mylat[0]"
+    :cy="mylat[1]"
+    fill="#28f3d8"
+  ></circle>
+</svg>
+  
+  
+  
+  
+        <el-collapse-item title="Consistency" name="1">
+          <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
+          <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+        </el-collapse-item>
+        <el-collapse-item title="Feedback" name="2">
+          <div>Operation feedback: enable the users to clearly perceive their operations by style updates and interactive effects;</div>
+          <div>Visual feedback: reflect current state by updating or rearranging elements of the page.</div>
+        </el-collapse-item>
+        <el-collapse-item title="Efficiency" name="3">
+          <div>Simplify the process: keep operating process simple and intuitive;</div>
+          <div>Definite and clear: enunciate your intentions clearly so that the users can quickly understand and make decisions;</div>
+          <div>Easy to identify: the interface should be straightforward, which helps the users to identify and frees them from memorizing and recalling.</div>
+        </el-collapse-item>
+        <el-collapse-item title="Controllability" name="4">
+          <div>Decision making: giving advices about operations is acceptable, but do not make decisions for the users;</div>
+          <div>Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or terminating current operation.</div>
+        </el-collapse-item>  
+  
+  
+-->

@@ -1,4 +1,10 @@
 <template>
+  <el-collapse-item title="Availability" name="2">
+    <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
+    <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+  </el-collapse-item>
+
+<!--
   <div>
     <div class="menu-header" :class="{active: !availabilityExpand}" @click="expand">
       <div class="menu-title-holder" :class="{active: !availabilityExpand}" @click="expand">
@@ -32,6 +38,8 @@
       </div>
     </transition>
   </div>
+
+-->
 </template>
 
 <script>
@@ -74,16 +82,5 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-@import "../../assets/stylesheets/ControlsMenus.scss";
-.availability-holder {
-  padding: 4vh 0 4vh 0;
-  overflow: show;
-}
 
-.dur-box {
-  margin: 1vh;
-  margin-top: 4vh;
-  width: 96%;
-  font-size: 5px;
-}
 </style>

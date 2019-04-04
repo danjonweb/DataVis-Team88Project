@@ -108,3 +108,23 @@ Very similar to above, the schema:
 * "state" TEXT,
 * "cuisine" TEXT,
 * "number" INTEGER
+
+
+## Flight price history scrapper
+We crawl flight price history from faredetective https://www.faredetective.com/ and crawled data
+
+### Flight price history
+Price history of 156378 pair of airports and their price history over the last year
+Data are delimited by "\t" and each line contains 4 fields: 
+1. Destination airport
+2. Source airport
+3. HTTP response code from the server
+4. JSON blob of price history
+
+The schema of flight_history_price table:
+* "src" TEXT
+* "dst" TEXT
+* "dst_cid" TEXT
+* "yearmonth" TEXT
+* "month" TEXT
+* "price" REAL 

@@ -4,7 +4,7 @@ import json
 conn = sqlite3.connect('../cityDB.sqlite')
 c = conn.cursor()
 
-c.execute("""CREATE TABLE flight_price_history (src text, dst text, month text, price real)""")
+c.execute("""CREATE TABLE flight_price_history (src text, dst text, yearmonth text, month text, price real)""")
 
 mapping = {
     'Jan': '01',
@@ -26,7 +26,7 @@ def convert(d):
     month, year = d['year'].split()
     return {
         "month": year + mapping[month],
-        "price": float(d['price'])
+        "price": float(d['price']),
     }
 
 
@@ -51,6 +51,6 @@ for l in open('crawled_flight_history.data'):
         price_list = month_prices[month]
         avg = sum(price_list)/len(price_list)
         #print(src, dst, month, avg)
-        c.execute("INSERT INTO flight_price_history VALUES ('{}','{}','{}','{}')".format(src, dst, month, avg))
+        c.execute("INSERT INTO flight_price_history VALUES ('{}','{}','{}','{}','{}')".format(src, dst, month, month[4:6],avg))
 conn.commit()
 conn.close()

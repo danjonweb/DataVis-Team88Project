@@ -47,7 +47,8 @@ function findClosestAirports(origin, airports, nAirports, radius) {
     airports.forEach(element => {
         airportDistance.push({'airportCoordinates': [element.latitude, element.longitude],
                               'airportCode': element.iata_code,
-                              'distance': haversineDistance(origin, element, true)
+                              'distance': haversineDistance(origin, 
+                                [element.latitude, element.longitude], true)
             });
     });
     
@@ -58,16 +59,17 @@ function findClosestAirports(origin, airports, nAirports, radius) {
 
       // Keep n airports
       var closestAirports = closeAirports.sort(sortAirports).slice(0, nAirports);
+
+      // Extract the airport codes
+      var closestAirportCodes = []
+      closestAirports.forEach(function(x) {closestAirportCodes.push(x.airportCode);})
     } else {
       // Sort the airports based on their distance and keep the closest one
       var closestAirports = airportDistance.sort(sortAirports)[0];
+
+      var closestAirportCodes = [closestAirports.airportCode];
     }
 
-    // Extract the airport codes
-    var closestAirportCodes = []
     
-    closestAirports.forEach(function(x) {closestAirportCodes.append(x.airportCode);})
-    
-    return closestAirports
-
+    return closestAirportCodes
 }

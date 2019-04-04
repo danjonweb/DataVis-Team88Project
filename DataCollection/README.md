@@ -121,7 +121,7 @@ Data are delimited by "\t" and each line contains 4 fields:
 3. HTTP response code from the server
 4. JSON blob of price history
 
-The schema of flight_history_price table is:
+The schema of the flight_history_price table is:
 * "src" TEXT
 * "dst" TEXT
 * "dst_cid" TEXT

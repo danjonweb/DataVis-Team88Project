@@ -1,12 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import * as axios from "axios";
+import { findClosestAirports } from "@/helpers/find_closest_airports"
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    databaseOnline: true,
     showAbout: true,
-    budget: 1000,
+    budget: 1200,
 
     selectedActivities: [],
 
@@ -43,6 +46,8 @@ export default new Vuex.Store({
 
     crimeRating: 1.5,
     // give data pre computed.
+    airPorts: [],
+    closestAirports: [],
     cities: [
       {
         code: "SFO",
@@ -239,6 +244,10 @@ export default new Vuex.Store({
 
   },
   mutations: {
+    databaseOnlineStatus(state, payload) {
+      state.databaseOnline = payload
+    },
+
     showHideAboutMutation(state, payload) {
       state.showAbout = payload;
     },
@@ -250,17 +259,48 @@ export default new Vuex.Store({
 
     setBudgetMutation(state, payload) {
       state.budget = payload
+    },
+
+    setAirports(state, payload) {
+      state.airPorts = payload
+    },
+
+    setClosestAirports(state, payload) {
+      var closestAirports = findClosestAirports(payload, state.airPorts, 5, 1000)
+      state.closestAirports = closestAirports
     }
   },
   actions: {
     showHideAboutAction(context, payload) {
       context.commit('showHideAboutMutation', payload);
     },
+
     modCities(context) {
       context.commit('modCitiesMutate')
     },
+
     setBudgetAction(context, payload) {
       context.commit('setBudgetMutation', payload);
     },
+
+    async getAllAirports(context) {
+      try {
+        const response = await axios.get('http://localhost:3000/airports');
+        var good_data = []
+        response.data.forEach((aport) => {
+          if (aport.iata_code !== "\\N") {
+            good_data.push(aport)
+          }
+        })
+        context.commit('setAirports', good_data);
+
+      } catch (error) {
+        context.commit('databaseOnlineStatus', false);
+      }
+    },
+
+    getClosestAirports(context, payload) {
+      context.commit('setClosestAirports', payload)
+    }
   },
 });

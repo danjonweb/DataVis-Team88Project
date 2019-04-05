@@ -1,5 +1,9 @@
 <template>
   <section class="visualization">
+    <h1
+      class="db-warning"
+      v-if="!this.$store.state.databaseOnline"
+    >Database Issue!!! Please Start DB</h1>
     <div style="display: flex;" class="address-input">
       <b-form-input
         type="text"
@@ -21,7 +25,7 @@
       <circle
         v-for="location in locations"
         :key="location[0].toString()"
-        r="7"
+        r="6"
         :cx="location[0]"
         :cy="location[1]"
         fill="red"
@@ -49,12 +53,9 @@
 
 <script>
 import * as d3 from "d3";
-// import * as d3geo from "d3-geo";
 import * as axios from "axios";
 import * as topojson from "topojson-client";
 import usmap from "@/assets/us.json";
-import {printSomeStuff, printLogo } from "@/components/SampleHelperFucntions"
-
 
 // console.log(usmap)
 const states = topojson.feature(usmap, usmap.objects.states);
@@ -78,8 +79,8 @@ export default {
     };
   },
   beforeMount() {
+    this.$store.dispatch("getAllAirports");
     d3.select(window).on("resize", this.sizeChange);
-
     this.projection = d3.geoAlbersUsa();
 
     this.path = d3.geoPath().projection(this.projection);
@@ -87,8 +88,6 @@ export default {
     this.c = () => this.path(nation);
 
     this.sizeChange();
-    printSomeStuff('HEY HEY HEY....  This is something to print TO CONSOLE !!!!!')
-    printLogo()
   },
   mounted() {
     this.getDefaultLocaiton();
@@ -118,6 +117,10 @@ export default {
         ];
         this.local =
           "IP Default - " + response.data.city + ", " + response.data.region;
+        this.$store.dispatch("getClosestAirports", [
+          this.placeLatLon[1],
+          this.placeLatLon[0]
+        ]);
         this.draw();
       });
     },
@@ -150,6 +153,11 @@ export default {
             data.results[0].geometry.location.lat
           ];
           this.scaledPlaceLatLon = [this.projection(this.placeLatLon)];
+
+          this.$store.dispatch("getClosestAirports", [
+            this.placeLatLon[1],
+            this.placeLatLon[0]
+          ]);
         })
         .catch(err => {
           if (err) {
@@ -167,10 +175,16 @@ export default {
       this.c = () => this.path(nation);
       // insert algo here
       this.locations = [];
+      this.badLocations = [];
+
       this.cities.forEach(city => {
         if (city.cost <= this.budget) {
           var coords = this.projection([city.lon, city.lat]);
-          this.locations.push(coords);
+          if (coords != undefined) {
+            this.locations.push(coords);
+          } else {
+            this.badLocations.push([city.lat, city.lon]);
+          }
         }
       });
     }
@@ -211,6 +225,11 @@ export default {
 .fuller {
   width: 100%;
   height: 58vh;
+}
+
+.db-warning {
+  position: absolute;
+  margin: 30vh 0 0 10vw;
 }
 
 @media (orientation: landscape), (min-width: 733px) {

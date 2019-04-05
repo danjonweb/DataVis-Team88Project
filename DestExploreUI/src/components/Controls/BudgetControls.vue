@@ -55,7 +55,7 @@ export default {
   },
   data: function() {
     return {
-      budget: 1000,
+      budget: this.$store.state.budget,
       expanded: true,
       airlineDisable: false
     };

@@ -28,11 +28,15 @@ npm -v
 npm install
 ```
 
+### Start the database server
+```
+node server.js
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
-
 
 ## From here on you can ignore until we want to build for 'production':
 

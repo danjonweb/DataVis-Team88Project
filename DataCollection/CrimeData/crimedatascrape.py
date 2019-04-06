@@ -11,6 +11,8 @@ import urllib.request as urllib2
 from bs4 import BeautifulSoup
 import numpy as np
 import time
+import sqlite3
+conn = sqlite3.connect("../cityDB.sqlite")
 
 starttime = time.time()
 # city names
@@ -68,4 +70,12 @@ for i in cities:
     # delay to meet 40 request per 10 second rule
     time.sleep((np.random.random()+1)*30)
     all_city_data[i] = city_data
-    
+
+crime_data = pd.DataFrame()
+crime_data["city"] = [i.split(",")[0] for i in cities]
+crime_data["state"] = [i.split(", ")[1] for i in cities]
+crime_data["crime_ind"] = [all_city_data[i] for i in cities]
+# push to DB
+crime_data[["city","state","crime_ind"]].to_sql('crime_data',conn, if_exists='replace', index=False)
+
+conn.close()

@@ -36,7 +36,7 @@ for i in range(len(cities_info)):
     city_id = city.cid
     city_name = city.city
     state = city.state
-    airports = find_closest_airport.find_closest_airport(city.coordinates, airport_info, n_airports=5, radius=60)
+    airports = find_closest_airport.find_closest_airport(city.coordinates, airport_info, n_airports=5, radius=80)
     city_airport.append({'city_id': city_id, 'city_name': city_name, 'state': state,
                          'closest_airport': airports[0], 'second_closest_airport': airports[1],
                         'third_closest_airport': airports[2]})

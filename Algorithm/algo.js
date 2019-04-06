@@ -24,7 +24,24 @@ function ReturnDestinations(
      TODO: Add filters code here. It should returns a list of candidate city ids
      ...
      */
+    select filtered.cid from 
 
+    ((select a.dst,a.month,a.dst_cid,a.price,a.src 
+    from flight_price_history a 
+    where(a.src in (userAirports)) and (a.month in (tripMonths)) 
+    group by a.dst_cid 
+    having avg(a.price)<0.4*budget) as flight_price_filter 
+    
+    inner join
+    (select b.cid,b.avg_temp,b.avg_prcp
+    from city_weather b
+    where (b.avg_prcp<maxPrecip) and (b.avg_prcp>minPrecip)) as weather_filter 
+    on flight_price_filter.dst_cid = weather_filter.cid
+    
+    inner join (select c.cid, cast(c.crime_ind as real)
+    from crime_data c
+    where (c.crime_ind>minCrime) and (c.crime_ind<maxCrime)) as crime_filter
+    on weather_filter.cid=crime_filter.cid) filtered;
     /*
      for now I assume following candidateCityIDs
      finally it should be something like:

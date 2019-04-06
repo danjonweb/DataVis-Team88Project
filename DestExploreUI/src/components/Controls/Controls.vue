@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <Team88ControlsHeader/>
-    <section class="sidebar">
+  <div class="control-background">
+    <b-card class="sidebar" header-tag="header">
+      <Team88UserLocationHeader class="inputLocation" slot="header"></Team88UserLocationHeader>
       <Team88BudgetControls
         :budgetExpand="menuSet.budget"
         v-on:expanded="expandMenu($event, 'budget')"
@@ -26,13 +26,13 @@
         :crimeExpand="menuSet.crime"
         v-on:expanded="expandMenu($event, 'crime')"
       />
-    </section>
+    </b-card>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Team88ControlsHeader from "@/components/Controls/ControlsHeader.vue";
+import Team88UserLocationHeader from "@/components/Controls/UserLocationHeader";
 import Team88BudgetControls from "@/components/Controls/BudgetControls.vue";
 import Team88AvailabilityControls from "@/components/Controls/AvailabilityControls.vue";
 import Team88WeatherControls from "@/components/Controls/WeatherControls.vue";
@@ -43,7 +43,7 @@ import Team88CrimeControls from "@/components/Controls/CrimeControls.vue";
 export default {
   name: "Team88Controls",
   components: {
-    Team88ControlsHeader,
+    Team88UserLocationHeader,
     Team88BudgetControls,
     Team88AvailabilityControls,
     Team88WeatherControls,
@@ -82,30 +82,49 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+.control-background {
+  background-color: rgb(247, 247, 247);
+}
 .sidebar {
-  height: 35vh;
+  height: 40vh;
   width: 100vw;
   min-width: 300px;
-  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box; /* Firefox, other Gecko */
-  box-sizing: border-box;
-  border: 1px solid #000;
-  border-top: none;
-  overflow: auto;
+  overflow: none;
   -webkit-overflow-scrolling: touch;
 }
 
+.inputLocation {
+  height: 13vh;
+  margin: 2vh 0 0 1vw;
+
+}
+
+.card-header{
+  padding: 0;
+  margin: 0;
+  background-color: rgb(121, 129, 129);
+  overflow: auto;
+  
+}
+
+
+
+.card-body {
+  padding: 0;
+  overflow: auto;
+}
 @media (orientation: landscape), (min-width: 733px) {
   .sidebar {
-    height: 87vh;
+    height: 85vh;
     width: 30vw;
+    margin: 3vh 1vw 0 0;
     min-width: 300px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    border-top: none;
+    border: 1px solid rgb(150, 150, 150);
     overflow: auto;
+    border-radius: 1.5vmin 1.5vmin 1.5vmin 1.5vmin;
+    -webkit-box-shadow: 0px 1px 29px -6px rgba(71, 71, 71, 1);
+    -moz-box-shadow: 0px 1px 29px -6px rgba(71, 71, 71, 1);
+    box-shadow: 0px 1px 29px -6px rgba(71, 71, 71, 1);
   }
 }
 </style>

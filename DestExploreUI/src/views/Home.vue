@@ -35,6 +35,7 @@ export default {
     height: 92vh;
     width: 100vw;
     display: flex;
+    
   }
 }
 </style>

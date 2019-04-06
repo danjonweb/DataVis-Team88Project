@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     databaseOnline: true,
     showAbout: true,
+    userLatLon: [],
     budget: 1200,
 
     selectedActivities: [],
@@ -257,6 +258,10 @@ export default new Vuex.Store({
 
     },
 
+    setUserLatLon(state, payload) {
+      state.userLatLon = payload
+    },
+
     setBudgetMutation(state, payload) {
       state.budget = payload
     },
@@ -277,6 +282,10 @@ export default new Vuex.Store({
 
     modCities(context) {
       context.commit('modCitiesMutate')
+    },
+
+    setStartingLocation(context, payload) {
+      context.commit('setUserLatLon', payload)
     },
 
     setBudgetAction(context, payload) {

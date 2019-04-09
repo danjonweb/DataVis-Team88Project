@@ -11,21 +11,36 @@
     <transition name="expand">
       <div v-if="weatherExpand" class="weather-holder menu-background">
         <div v-if="simple">
-          <b-input-group class="toggle-weather" prepend="Enable">
-            <b-input-group-prepend is-text>
-              <input
-                type="checkbox"
-                :checked="idealOn"
-                v-on:change="idealChange()"
-                aria-label="Checkbox for following text input"
-              >
-            </b-input-group-prepend>
-          </b-input-group>
+          <div class="read-out">
+            <b-input-group class="toggle-weather" prepend="Enable">
+              <b-input-group-prepend is-text>
+                <input
+                  type="checkbox"
+                  :checked="tempControlOn"
+                  v-on:change="idealChange()"
+                  aria-label="Checkbox for following text input"
+                >
+              </b-input-group-prepend>
+            </b-input-group>
+            <p :hidden="!tempControlOn">Low: {{low}} High: {{high}}</p>
+          </div>
 
           <b-button-group class="weather-buttons">
-            <b-button :disabled="!idealOn" variant="outline-primary">Cool</b-button>
-            <b-button :disabled="!idealOn" variant="outline-secondary">Mild</b-button>
-            <b-button :disabled="!idealOn" variant="outline-danger">Warm</b-button>
+            <b-button
+              :disabled="!tempControlOn"
+              @click="setTempRange([simpleTempRanges.lowLow, simpleTempRanges.lowHigh])"
+              variant="outline-primary"
+            >Cool</b-button>
+            <b-button
+              :disabled="!tempControlOn"
+              @click="setTempRange([simpleTempRanges.midLow, simpleTempRanges.midHigh])"
+              variant="outline-secondary"
+            >Mild</b-button>
+            <b-button
+              :disabled="!tempControlOn"
+              @click="setTempRange([simpleTempRanges.highLow, simpleTempRanges.highHigh])"
+              variant="outline-danger"
+            >Warm</b-button>
           </b-button-group>
 
           <div class="simp-adv-toggle">
@@ -39,16 +54,16 @@
             <b-input-group-prepend is-text>
               <input
                 type="checkbox"
-                :checked="idealOn"
+                :checked="tempControlOn"
                 v-on:change="idealChange()"
                 aria-label="Checkbox for following text input"
               >
             </b-input-group-prepend>
             <b-form-input
               type="number"
-              :disabled="!idealOn"
+              :disabled="!tempControlOn"
               :value="idealTemp"
-              v-on:change="idealTempValueChange($event)"
+              v-on:change="setTempIdeal($event)"
               aria-label="Text input with checkbox"
             />
           </b-input-group>
@@ -58,9 +73,9 @@
 
             <b-form-input
               type="number"
-              :disabled="!idealOn"
+              :disabled="!tempControlOn"
               :value="tempTol"
-              v-on:change="tempTolValueChange($event)"
+              v-on:change="setTempTol($event)"
               aria-label="Text input with checkbox"
             />
           </b-input-group>
@@ -81,41 +96,23 @@ export default {
   },
   data: function() {
     return {
-      idealOn: false,
+      tempControlOn: this.$store.state.tempControlOn,
       tempTol: 15,
       idealTemp: 72,
       expanded: false,
-      simple: true
+      simple: true,
+      simpleTempRanges: this.$store.state.simpleTempRanges,
+      low: 51,
+      high: 76
     };
-  },
-  computed: {
-    // a computed getter
-    minTemp: function() {
-      return this.idealTemp - this.tempTol;
-    },
-    maxTemp: function() {
-      return this.idealTemp + this.tempTol;
-    }
   },
   methods: {
     getImgUrl(pic) {
       return require(`../../assets/${pic}`);
     },
     idealChange() {
-      this.idealOn = !this.idealOn;
-      if (!this.idealOn) {
-        console.log("Temp Preference Off");
-      } else {
-        console.log("Min", this.minTemp, "Max", this.maxTemp);
-      }
-    },
-    tempTolValueChange(e) {
-      this.tempTol = parseInt(e);
-      console.log("Min", this.minTemp, "Max", this.maxTemp);
-    },
-    idealTempValueChange(e) {
-      this.idealTemp = parseInt(e);
-      console.log("Min", this.minTemp, "Max", this.maxTemp);
+      this.tempControlOn = !this.tempControlOn;
+      this.$store.dispatch("setEnableWeather", this.tempControlOn);
     },
     expand() {
       this.exapnded = this.weatherExpand;
@@ -123,6 +120,28 @@ export default {
     },
     setAdvanced() {
       this.simple = !this.simple;
+    },
+    setTempTol(e) {
+      this.tempTol = e;
+      this.setTempRange([
+        parseInt(this.idealTemp) - parseInt(this.tempTol),
+        parseInt(this.idealTemp) + parseInt(this.tempTol)
+      ]);
+    },
+    setTempIdeal(e) {
+      this.idealTemp = e;
+      this.setTempRange([
+        parseInt(this.idealTemp) - parseInt(this.tempTol),
+        parseInt(this.idealTemp) + parseInt(this.tempTol)
+      ]);
+    },
+    setTempRange(tempRange) {
+      this.low = tempRange[0];
+      this.high = tempRange[1];
+      this.$store.dispatch("setUserTempRange", {
+        low: tempRange[0],
+        high: tempRange[1]
+      });
     }
   }
 };
@@ -140,6 +159,10 @@ export default {
   padding-top: 0;
   margin-left: 5px;
   margin-bottom: 3vh;
+}
+
+.read-out {
+  display: flex;
 }
 
 .weather-buttons {

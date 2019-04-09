@@ -54,6 +54,7 @@ export default {
   },
   watch: {
     crimeValue() {
+      this.$store.dispatch("setCrimeRating", this.crimeValue);
       if (this.crimeValue >= 4.0) {
         this.colorCode = "outline-success";
       } else if (this.crimeValue < 4.0 && this.crimeValue >= 2.0) {

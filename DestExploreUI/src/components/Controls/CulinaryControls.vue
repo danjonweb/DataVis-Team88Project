@@ -15,8 +15,9 @@
           :disabled="foodPopoverShow"
           :variant="buttonFill"
           ref="button"
-        >Select Culinary Preferences</b-button>
-        <div :hidden="!itemsSelected">Culinary Prerences Are Selected</div>
+        >Select Culinary Preferences:</b-button>
+        <div :hidden="!itemsSelected">Selected Culinary Prerences</div>
+        <li class="listed-culinary" v-for="select in foodSelected" :key="select">{{select}}</li>
         <b-popover
           target="exPopoverReactive2"
           triggers="click"
@@ -34,7 +35,12 @@
 
           <div>
             <b-form-group label="Culinary Preferences">
-              <b-form-checkbox-group switches v-model="foodSelected" stacked :options="options"/>
+              <b-form-checkbox-group
+                switches
+                v-model="foodSelected"
+                stacked
+                :options="foodOptions"
+              />
             </b-form-group>
           </div>
         </b-popover>
@@ -54,12 +60,14 @@ export default {
   data: function() {
     return {
       foodPopoverShow: false,
-      foodSelected: [], // Must be an array reference!
-      options: this.$store.state.culinaryOptions,
+      foodSelected: [],
       itemsSelected: false,
       buttonFill: "outline-primary",
       expanded: false
     };
+  },
+  beforeMount() {
+    this.$store.dispatch("getAllCuisine");
   },
   methods: {
     getImgUrl(pic) {
@@ -73,8 +81,14 @@ export default {
       this.$emit("expanded", [!this.expanded]);
     }
   },
+  computed: {
+    foodOptions() {
+      return this.$store.state.culinaryOptions;
+    }
+  },
   watch: {
     foodSelected() {
+      this.$store.dispatch("setSelectedCulinary", this.foodSelected);
       if (this.foodSelected.length > 0) {
         this.itemsSelected = true;
         this.buttonFill = "primary";
@@ -92,5 +106,9 @@ export default {
 .culinary-holder {
   padding: 4vh 0 4vh 0;
   overflow: auto;
+}
+.listed-culinary {
+  text-align: left;
+  margin-left: 20%;
 }
 </style>

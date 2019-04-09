@@ -16,7 +16,6 @@
           :value="dateRange"
           v-on:update="changeDateRange($event)"
           v-on:reset="changeDateRange('reset')"
-          v-on:close="changeDateRange('close')"
         />
         <b-input-group class="dur-box">
           <b-input-group-text slot="prepend" class="pre-tag">Trip Duration (days)</b-input-group-text>
@@ -49,7 +48,7 @@ export default {
     return {
       dateRange: "none",
       expanded: false,
-      tripDuration: 3
+      tripDuration: this.$store.state.tripDuration
     };
   },
   methods: {
@@ -60,7 +59,17 @@ export default {
       var startDate = dr.start;
       var endDate = dr.end;
       // `${startDate} ${endDate}`
-      console.log(startDate, endDate);
+      if (startDate && endDate) {
+        this.$store.dispatch("setAvailability", {
+          startDate: startDate,
+          endDate: endDate
+        });
+      } else if (!startDate && !endDate) {
+        this.$store.dispatch("setAvailability", {
+          startDate: null,
+          endDate: null
+        });
+      }
     },
     expand() {
       this.exapnded = this.availabilityExpand;
@@ -68,6 +77,8 @@ export default {
     },
     tripDurationChange(dur) {
       this.tripDuration = dur;
+      this.$store.dispatch("setTripDuration", dur)
+
     }
   }
 };

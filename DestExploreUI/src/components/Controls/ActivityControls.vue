@@ -16,7 +16,8 @@
           :variant="buttonFill"
           ref="button"
         >Select Activities</b-button>
-        <div :hidden="!itemsSelected">Activities are selected</div>
+        <div :hidden="!itemsSelected">Activities Selected:</div>
+        <li class="listed-activities" v-for="select in selected" :key="select">{{select}}</li>
         <b-popover
           target="exPopoverReactive1"
           triggers="click"
@@ -105,6 +106,7 @@ export default {
   },
   watch: {
     selected() {
+      this.$store.dispatch("setSelectedActivities", this.selected);
       if (this.selected.length > 0) {
         this.itemsSelected = true;
         this.buttonFill = "primary";
@@ -157,5 +159,10 @@ export default {
   color: #000 !important;
   border-color: #fff !important;
   border-bottom: 1px solid #000 !important;
+}
+
+.listed-activities {
+  text-align: left;
+  margin-left: 20%;
 }
 </style>

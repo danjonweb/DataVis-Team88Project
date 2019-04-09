@@ -57,7 +57,7 @@ export default {
     return {
       budget: this.$store.state.budget,
       expanded: true,
-      airlineDisable: false
+      airlineDisable: this.$store.state.airlineDisable
     };
   },
   methods: {
@@ -74,6 +74,7 @@ export default {
     },
     airDisableChange() {
       this.airlineDisable = !this.airlineDisable;
+      this.$store.dispatch("setAirlineDisable", this.airlineDisable);
     }
   }
 };

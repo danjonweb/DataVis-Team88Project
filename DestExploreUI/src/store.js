@@ -11,28 +11,26 @@ export default new Vuex.Store({
     showAbout: true,
     userLatLon: [],
     budget: 1200,
+    airlineDisable: false,
+    availability: {startDate:null, endDate:null},
+    tripDuration: 3,
+    tempControlOn: false,
+    simpleTempRanges: {
+      lowLow: 25,
+      lowHigh: 50,
+      midLow: 51,
+      midHigh: 76,
+      highLow: 77,
+      highHigh: 102
+    },
 
-    selectedActivities: [],
+    userTempRange: {low:51, high: 76},
 
     activityOptions: {},
+    selectedActivities: [],
 
+    culinaryOptions: [],
     selectedFood: [],
-
-    culinaryOptions: [
-      { text: "American", value: "american", disabled: false },
-      { text: "Chinese", value: "chinese", disabled: false },
-      { text: "French", value: "french", disabled: false },
-      { text: "Greek", value: "greek", disabled: false },
-      { text: "Indian", value: "indian", disabled: false },
-      { text: "Italian", value: "italian", disabled: false },
-      { text: "Japanese", value: "japanese", disabled: false },
-      { text: "Korean", value: "korean", disabled: false },
-      { text: "Lebanese", value: "lebanese", disabled: false },
-      { text: "Mexican", value: "mexican", disabled: false },
-      { text: "Soul Food", value: "soul", disabled: false },
-      { text: "Thai", value: "thai", disabled: false },
-      { text: "Vietnamese", value: "vietnamese", disabled: false }
-    ],
 
     crimeRating: 1.5,
     // give data pre computed.
@@ -242,17 +240,44 @@ export default new Vuex.Store({
       state.showAbout = payload;
     },
 
-    modCitiesMutate(state) {
-      state.cities.pop()
-
-    },
-
     setUserLatLon(state, payload) {
       state.userLatLon = payload
     },
 
     setBudgetMutation(state, payload) {
       state.budget = payload
+    },
+
+    setAirlineDisableMutation(state, payload) {
+      state.airlineDisable = payload
+    },
+
+    setAvailabilityMutation(state, payload){
+      state.availability = payload
+    },
+
+    setTripDurationMutation(state, payload){
+      state.tripDuration = payload
+    },
+
+    setEnableWeatherMutation(state, payload) {
+      state.tempControlOn = payload
+    },
+
+    setUserTempRangeMutation(state, payload){
+      state.userTempRange = payload
+    },
+
+    setselectedActivitiesMutation(state, payload){
+      state.selectedActivities = payload
+    },
+
+    setSelectedCulinaryMutation(state, payload){
+      state.selectedFood = payload
+    },
+
+    setCrimeRatingMutation(state, payload){
+      state.crimeRating = payload
     },
 
     setAirports(state, payload) {
@@ -279,15 +304,19 @@ export default new Vuex.Store({
       })
       state.activityOptions = processed_activities
       
+    },
+
+    setCuisineOptionsMutation(state, payload){
+      var collectedFood = []
+      payload.forEach((cuisine) => {
+        collectedFood.push(cuisine.cuisine)
+      })
+      state.culinaryOptions = collectedFood
     }
   },
   actions: {
     showHideAboutAction(context, payload) {
       context.commit('showHideAboutMutation', payload);
-    },
-
-    modCities(context) {
-      context.commit('modCitiesMutate')
     },
 
     setStartingLocation(context, payload) {
@@ -296,6 +325,10 @@ export default new Vuex.Store({
 
     setBudgetAction(context, payload) {
       context.commit('setBudgetMutation', payload);
+    },
+
+    setAirlineDisable(context, payload){
+      context.commit('setAirlineDisableMutation', payload);
     },
 
     async getAllAirports(context) {
@@ -320,8 +353,46 @@ export default new Vuex.Store({
         context.commit('setActivities', response.data);
 
       } catch (error) {
-        // context.commit('databaseOnlineStatus', false);
+        context.commit('databaseOnlineStatus', false);
       }
+    },
+
+    async getAllCuisine(context) {
+      try {
+        const response = await axios.get('http://localhost:3000/cuisine');
+        context.commit('setCuisineOptionsMutation', response.data);
+
+      } catch (error) {
+        context.commit('databaseOnlineStatus', false);
+      }
+    },
+
+    setAvailability(context, payload) {
+      context.commit('setAvailabilityMutation', payload)
+    },
+
+    setTripDuration(context, payload) {
+      context.commit('setTripDurationMutation', payload)
+    },
+
+    setEnableWeather(context, payload){
+      context.commit('setEnableWeatherMutation', payload);
+    },
+
+    setUserTempRange(context, payload) {
+      context.commit('setUserTempRangeMutation', payload)
+    },
+
+    setSelectedActivities(context, payload) {
+      context.commit('setselectedActivitiesMutation', payload)
+    },
+
+    setSelectedCulinary(context, payload) {
+      context.commit('setSelectedCulinaryMutation', payload)
+    },
+
+    setCrimeRating(context, payload) {
+      context.commit('setCrimeRatingMutation', payload)
     },
 
     getClosestAirports(context, payload) {

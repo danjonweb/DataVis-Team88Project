@@ -33,8 +33,37 @@
           </template>
 
           <div>
-            <b-form-group label="Activities">
-              <b-form-checkbox-group switches v-model="selected" stacked :options="options"/>
+            <b-form-group label="Activity Categories">
+              <b-button-group vertical>
+                <div v-for="optionGroup in Object.keys(options)" :key="optionGroup">
+                  <b-button size="sm" :id="optionGroup" class="category-button">{{optionGroup}}</b-button>
+                  <b-popover
+                    :target="optionGroup"
+                    triggers="click"
+                    :show.sync="nestedPopoverShow[optionGroup]"
+                    placement="auto"
+                    container="myContainer"
+                    ref="popover"
+                  >
+                    <template slot="title">
+                      <b-button
+                        @click="onNestedClose(optionGroup)"
+                        class="close"
+                        aria-label="Close"
+                      >
+                        <span class="d-inline-block" aria-hidden="true">&nbsp; &times; &nbsp;</span>
+                      </b-button>
+                      <strong>{{optionGroup}}</strong>
+                    </template>
+                    <b-form-checkbox-group
+                      switches
+                      v-model="selected"
+                      stacked
+                      :options="options[optionGroup]"
+                    />
+                  </b-popover>
+                </div>
+              </b-button-group>
             </b-form-group>
           </div>
         </b-popover>
@@ -54,23 +83,24 @@ export default {
   data: function() {
     return {
       popoverShow: false,
-      selected: [], // Must be an array reference!
-      options: this.$store.state.activityOptions,
+      nestedPopoverShow: {},
+      selected: [],
       itemsSelected: false,
       buttonFill: "outline-primary",
       expanded: false
     };
   },
-  methods: {
-    getImgUrl(pic) {
-      return require(`../../assets/${pic}`);
-    },
-    onClose() {
-      this.popoverShow = false;
-    },
-    expand() {
-      this.exapnded = this.activityExpand;
-      this.$emit("expanded", [!this.expanded]);
+  beforeMount() {
+    this.$store.dispatch("getAllActivities");
+  },
+  computed: {
+    options: {
+      get() {
+        return this.$store.state.activityOptions;
+      },
+      set() {
+        this.$store.state.activityOptions;
+      }
     }
   },
   watch: {
@@ -82,15 +112,50 @@ export default {
         this.itemsSelected = false;
         this.buttonFill = "outline-primary";
       }
+    },
+    nestedPopoverShow() {
+      var popOverNest = {};
+      var activeCats = Object.keys(this.$store.state.activityOptions);
+      activeCats.forEach(activity => {
+        popOverNest[activity] = false;
+      });
+      return popOverNest;
+    }
+  },
+  methods: {
+    getImgUrl(pic) {
+      return require(`../../assets/${pic}`);
+    },
+    onClose() {
+      this.popoverShow = false;
+    },
+    onNestedClose(arg) {
+      this.nestedPopoverShow[arg] = false;
+    },
+    expand() {
+      this.exapnded = this.activityExpand;
+      this.$emit("expanded", [!this.expanded]);
     }
   }
 };
 </script>
 
-<style scoped lang='scss'>
+<style lang='scss'>
 @import "../../assets/stylesheets/ControlsMenus.scss";
 .activity-holder {
   padding: 4vh 0 4vh 0;
   overflow: auto;
+}
+
+.popover-body {
+  height: 70vh;
+  overflow: auto;
+}
+
+.category-button {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-color: #fff !important;
+  border-bottom: 1px solid #000 !important;
 }
 </style>

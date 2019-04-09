@@ -25,6 +25,32 @@ app.get('/airports', (req, res) => {
     );
 });
 
+app.get('/activity', (req, res) => {
+    db.all(
+        `SELECT DISTINCT category_activity, activity_name FROM city_activities ORDER BY 1`,
+        (err, rows) => {
+            if (rows.length > 0) {
+                res.send(rows);
+            } else {
+                res.send({}); // failed, so return an empty object instead of undefined
+            }
+        }
+    );
+});
+
+app.get('/cuisine', (req, res) => {
+    db.all(
+        `SELECT DISTINCT cuisine FROM restaurant_types ORDER BY 1`,
+        (err, rows) => {
+            if (rows.length > 0) {
+                res.send(rows);
+            } else {
+                res.send({}); // failed, so return an empty object instead of undefined
+            }
+        }
+    );
+});
+
 app.get('/airPriceFilter', (req, res) => {
     db.all(
         `SELECT * FROM flight_price_history LIMIT 5`,

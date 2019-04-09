@@ -14,18 +14,7 @@ export default new Vuex.Store({
 
     selectedActivities: [],
 
-    activityOptions: [
-      { text: "Backpacking", value: "backpacking", disabled: false },
-      { text: "Concerts", value: "concerts", disabled: false },
-      { text: "Fishing", value: "fishing", disabled: false },
-      { text: "Gambling", value: "gambling", disabled: false },
-      { text: "Golfing", value: "golfing", disabled: false },
-      { text: "Museums", value: "museums", disabled: false },
-      { text: "Professional Sports", value: "professional sports", disabled: false },
-      { text: "Sky Diving", value: "sky diving", disabled: false },
-      { text: "Tours", value: "tours", disabled: false },
-      { text: "Water Sports", value: "water sports", disabled: false }
-    ],
+    activityOptions: {},
 
     selectedFood: [],
 
@@ -273,6 +262,23 @@ export default new Vuex.Store({
     setClosestAirports(state, payload) {
       var closestAirports = findClosestAirports(payload, state.airPorts, 5, 1000)
       state.closestAirports = closestAirports
+    },
+
+    setActivities(state, payload){
+      var activity_category
+      var processed_activities = {}
+      payload.forEach((activity) => {
+        activity_category = activity.category_activity
+        if( activity_category in processed_activities) {
+          processed_activities[activity_category].push(activity.activity_name)
+        }
+        else{
+          processed_activities[activity_category] = [activity.activity_name]
+        }
+        
+      })
+      state.activityOptions = processed_activities
+      
     }
   },
   actions: {
@@ -305,6 +311,16 @@ export default new Vuex.Store({
 
       } catch (error) {
         context.commit('databaseOnlineStatus', false);
+      }
+    },
+
+    async getAllActivities(context) {
+      try {
+        const response = await axios.get('http://localhost:3000/activity');
+        context.commit('setActivities', response.data);
+
+      } catch (error) {
+        // context.commit('databaseOnlineStatus', false);
       }
     },
 

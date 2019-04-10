@@ -11,16 +11,16 @@
     <transition name="expand">
       <div v-if="crimeExpand" class="crime-holder menu-background">
         <div class="mt-2 c-index">
-          Low Crime Priority Index:
+          Max Crime Index:
           <strong>{{ crimeValue }}</strong>
         </div>
         <b-input-group size="sm" class="mt-3 crime-slider">
           <b-input-group-prepend>
             <b-button size="sm" class="no-hov" :variant="colorCode">0</b-button>
           </b-input-group-prepend>
-          <b-form-input type="range" id="range-2" v-model="crimeValue" min="0" max="5" step="0.5"/>
+          <b-form-input type="range" id="range-2" v-model="crimeValue" min="0" max="2000" step="200"/>
           <b-input-group-append>
-            <b-button size="sm" class="no-hov" :variant="colorCode">5</b-button>
+            <b-button size="sm" class="no-hov" :variant="colorCode">2000</b-button>
           </b-input-group-append>
         </b-input-group>
       </div>
@@ -39,7 +39,7 @@ export default {
   data: function() {
     return {
       crimeValue: this.$store.state.crimeRating,
-      colorCode: "outline-dark",
+      colorCode: "outline-success",
       expanded: false
     };
   },
@@ -55,12 +55,12 @@ export default {
   watch: {
     crimeValue() {
       this.$store.dispatch("setCrimeRating", this.crimeValue);
-      if (this.crimeValue >= 4.0) {
-        this.colorCode = "outline-success";
-      } else if (this.crimeValue < 4.0 && this.crimeValue >= 2.0) {
+      if (this.crimeValue >= 1600) {
+        this.colorCode = "outline-dark";
+      } else if (this.crimeValue < 1600 && this.crimeValue >= 800) {
         this.colorCode = "outline-primary";
       } else {
-        this.colorCode = "outline-dark";
+        this.colorCode = "outline-success";
       }
     }
   }

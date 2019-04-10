@@ -51,9 +51,21 @@ app.get('/cuisine', (req, res) => {
     );
 });
 
-app.get('/airPriceFilter', (req, res) => {
+app.get('/filteredcandidates', (req, res) => {
     db.all(
-        `SELECT * FROM flight_price_history LIMIT 5`,
+        `select filtered.cid from ((select a.dst,a.month,a.dst_cid,a.price,a.src 
+            from flight_price_history a 
+            where(a.src in ("NYC","EWR")) and (a.month in ("02")) 
+            group by a.dst_cid 
+            having avg(a.price)<200) as flight_price_filter inner join
+            (select b.cid,b.avg_temp,b.avg_prcp
+            from city_weather b
+            where (b.avg_prcp<2) and (b.avg_prcp>1)) as weather_filter 
+            on flight_price_filter.dst_cid = weather_filter.cid
+            inner join (select c.cid, cast(c.crime_ind as real)
+            from crime_data c
+            where (c.crime_ind>100) and (c.crime_ind<200)) as crime_filter
+            on weather_filter.cid=crime_filter.cid) filtered`,
         (err, rows) => {
             if (rows.length > 0) {
                 res.send(rows);

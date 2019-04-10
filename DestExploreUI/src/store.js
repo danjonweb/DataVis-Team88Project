@@ -16,15 +16,24 @@ export default new Vuex.Store({
     tripDuration: 3,
     tempControlOn: false,
     simpleTempRanges: {
-      lowLow: 25,
-      lowHigh: 50,
-      midLow: 51,
-      midHigh: 76,
-      highLow: 77,
-      highHigh: 102
+      lowLow: 0,
+      lowHigh: 49,
+      midLow: 50,
+      midHigh: 77,
+      highLow: 78,
+      highHigh: 99
+    },
+    simplePrecipRanges: {
+      dryLow: 0,
+      dryHigh: 30,
+      avgLow: 31,
+      avgHigh: 66,
+      wetLow: 67,
+      wetHigh: 100
     },
 
     userTempRange: {low:51, high: 76},
+    userPrecipRange: {low:31, high: 66},
 
     activityOptions: {},
     selectedActivities: [],
@@ -32,7 +41,7 @@ export default new Vuex.Store({
     culinaryOptions: [],
     selectedFood: [],
 
-    crimeRating: 1.5,
+    crimeRating: 600,
     // give data pre computed.
     airPorts: [],
     closestAirports: [],
@@ -268,6 +277,10 @@ export default new Vuex.Store({
       state.userTempRange = payload
     },
 
+    setUserPrecipRangeMutation(state, payload){
+      state.userPrecipRange = payload
+    },
+
     setselectedActivitiesMutation(state, payload){
       state.selectedActivities = payload
     },
@@ -381,6 +394,10 @@ export default new Vuex.Store({
 
     setUserTempRange(context, payload) {
       context.commit('setUserTempRangeMutation', payload)
+    },
+
+    setUserPercipRange(context, payload) {
+      context.commit('setUserPrecipRangeMutation', payload)
     },
 
     setSelectedActivities(context, payload) {

@@ -32,39 +32,14 @@
             </b-button>
             <strong>Activity Selection</strong>
           </template>
-
           <div>
             <b-form-group label="Activity Categories">
-              <b-button-group vertical>
-                <div v-for="optionGroup in Object.keys(options)" :key="optionGroup">
-                  <b-button size="sm" :id="optionGroup" class="category-button">{{optionGroup}}</b-button>
-                  <b-popover
-                    :target="optionGroup"
-                    triggers="click"
-                    :show.sync="nestedPopoverShow[optionGroup]"
-                    placement="auto"
-                    container="myContainer"
-                    ref="popover"
-                  >
-                    <template slot="title">
-                      <b-button
-                        @click="onNestedClose(optionGroup)"
-                        class="close"
-                        aria-label="Close"
-                      >
-                        <span class="d-inline-block" aria-hidden="true">&nbsp; &times; &nbsp;</span>
-                      </b-button>
-                      <strong>{{optionGroup}}</strong>
-                    </template>
-                    <b-form-checkbox-group
-                      switches
-                      v-model="selected"
-                      stacked
-                      :options="options[optionGroup]"
-                    />
-                  </b-popover>
-                </div>
-              </b-button-group>
+              <b-form-checkbox-group
+                switches
+                v-model="selected"
+                stacked
+                :options="Object.keys(options)"
+              />
             </b-form-group>
           </div>
         </b-popover>
@@ -84,7 +59,6 @@ export default {
   data: function() {
     return {
       popoverShow: false,
-      nestedPopoverShow: {},
       selected: [],
       itemsSelected: false,
       buttonFill: "outline-primary",
@@ -130,9 +104,6 @@ export default {
     },
     onClose() {
       this.popoverShow = false;
-    },
-    onNestedClose(arg) {
-      this.nestedPopoverShow[arg] = false;
     },
     expand() {
       this.exapnded = this.activityExpand;

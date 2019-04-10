@@ -22,7 +22,8 @@
                 >
               </b-input-group-prepend>
             </b-input-group>
-            <p :hidden="!tempControlOn">Low: {{low}} High: {{high}}</p>
+            <p :hidden="!tempControlOn">Temp-Low: {{low}} Temp-High: {{high}}</p>
+            <p :hidden="!tempControlOn">Precip-Low: {{precipLow}} Precip-High: {{precipHigh}}</p>
           </div>
 
           <b-button-group class="weather-buttons">
@@ -41,6 +42,24 @@
               @click="setTempRange([simpleTempRanges.highLow, simpleTempRanges.highHigh])"
               variant="outline-danger"
             >Warm</b-button>
+          </b-button-group>
+
+          <b-button-group class="weather-buttons">
+            <b-button
+              :disabled="!tempControlOn"
+              @click="setPrecipRange([simplePrecipRanges.wetLow, simplePrecipRanges.wetHigh])"
+              variant="outline-primary"
+            >Wet</b-button>
+            <b-button
+              :disabled="!tempControlOn"
+              @click="setPrecipRange([simplePrecipRanges.avgLow, simplePrecipRanges.avgHigh])"
+              variant="outline-success"
+            >Average</b-button>
+            <b-button
+              :disabled="!tempControlOn"
+              @click="setPrecipRange([simplePrecipRanges.dryLow, simplePrecipRanges.dryHigh])"
+              variant="outline-danger"
+            >Dry</b-button>
           </b-button-group>
 
           <div class="simp-adv-toggle">
@@ -79,6 +98,38 @@
               aria-label="Text input with checkbox"
             />
           </b-input-group>
+
+          <b-input-group class="temp-box">
+            <b-input-group-text slot="prepend" class="pre-tag">Ideal Precip (in)</b-input-group-text>
+
+            <b-input-group-prepend is-text>
+              <input
+                type="checkbox"
+                :checked="tempControlOn"
+                v-on:change="idealChange()"
+                aria-label="Checkbox for following text input"
+              >
+            </b-input-group-prepend>
+            <b-form-input
+              type="number"
+              :disabled="!tempControlOn"
+              :value="idealPrecip"
+              v-on:change="setPrecipIdeal($event)"
+              aria-label="Text input with checkbox"
+            />
+          </b-input-group>
+
+          <b-input-group class="temp-box">
+            <b-input-group-text slot="prepend" class="pre-tag">+/- Tolerance (in)</b-input-group-text>
+
+            <b-form-input
+              type="number"
+              :disabled="!tempControlOn"
+              :value="precipTol"
+              v-on:change="setPrecipTol($event)"
+              aria-label="Text input with checkbox"
+            />
+          </b-input-group>
           <b-button class="simp-adv-toggle" @click="setAdvanced">Simple Selection</b-button>
         </div>
       </div>
@@ -99,11 +150,16 @@ export default {
       tempControlOn: this.$store.state.tempControlOn,
       tempTol: 15,
       idealTemp: 72,
+      precipTol: 10,
+      idealPrecip: 45,
       expanded: false,
       simple: true,
       simpleTempRanges: this.$store.state.simpleTempRanges,
+      simplePrecipRanges: this.$store.state.simplePrecipRanges,
       low: 51,
-      high: 76
+      high: 76,
+      precipLow: 31,
+      precipHigh: 66
     };
   },
   methods: {
@@ -121,6 +177,7 @@ export default {
     setAdvanced() {
       this.simple = !this.simple;
     },
+
     setTempTol(e) {
       this.tempTol = e;
       this.setTempRange([
@@ -128,6 +185,14 @@ export default {
         parseInt(this.idealTemp) + parseInt(this.tempTol)
       ]);
     },
+    setPrecipTol(e) {
+      this.precipTol = e;
+      this.setPrecipRange([
+        parseInt(this.idealPrecip) - parseInt(this.precipTol),
+        parseInt(this.idealPrecip) + parseInt(this.precipTol)
+      ]);
+    },
+
     setTempIdeal(e) {
       this.idealTemp = e;
       this.setTempRange([
@@ -135,12 +200,28 @@ export default {
         parseInt(this.idealTemp) + parseInt(this.tempTol)
       ]);
     },
+    setPrecipIdeal(e) {
+      this.idealPrecip = e;
+      this.setPrecipRange([
+        parseInt(this.idealPrecip) - parseInt(this.precipTol),
+        parseInt(this.idealPrecip) + parseInt(this.precipTol)
+      ]);
+    },
+
     setTempRange(tempRange) {
       this.low = tempRange[0];
       this.high = tempRange[1];
       this.$store.dispatch("setUserTempRange", {
         low: tempRange[0],
         high: tempRange[1]
+      });
+    },
+    setPrecipRange(precipRange) {
+      this.precipLow = precipRange[0];
+      this.precipHigh = precipRange[1];
+      this.$store.dispatch("setUserPercipRange", {
+        low: precipRange[0],
+        high: precipRange[1]
       });
     }
   }
@@ -155,19 +236,23 @@ export default {
 }
 
 .toggle-weather {
-  width: 95%;
-  padding-top: 0;
+  width: 80%;
+  padding: 0;
+  margin: 0 0 3vh 5px !important;
   margin-left: 5px;
   margin-bottom: 3vh;
 }
 
 .read-out {
   display: flex;
+  font-size: calc(5px + 1vh);
+  margin-right: 1vw;
 }
 
 .weather-buttons {
   width: 25vw;
   min-width: 280px;
+  margin-bottom: 2vh;
 }
 
 .temp-box {
@@ -182,7 +267,7 @@ export default {
 }
 
 .simp-adv-toggle {
-  margin-top: 4vh;
+  margin-top: 2vh;
 }
 
 @media (orientation: landscape), (min-width: 733px) {

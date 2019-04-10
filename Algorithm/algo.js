@@ -274,6 +274,8 @@ function ReturnDestinations(
     // g35805|84
     // g60763|99
 
+    // 7. find city name and latitude and longitude
+    let cityStmt = `select cid, city, lat, lng from cities where cid in (${cidConditions})`;
 
     // initialize map
     var candidateFeatures = {};
@@ -295,6 +297,14 @@ function ReturnDestinations(
 
     // 6 SQL statements
     db.serialize(function () {
+
+        db.each(cityStmt, function(err, row){
+            if (err) callback(err, null);
+            candidateFeatures[row.cid].city_name = row.city;
+            candidateFeatures[row.cid].lat = row.lat;
+            candidateFeatures[row.cid].lng = row.lng;
+        })
+
         // all 6 features and fill in the feature dictionary
         db.each(flightStmt, function (err, row) {
             if (err) callback(err, null);

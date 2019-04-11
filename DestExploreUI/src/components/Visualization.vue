@@ -3,7 +3,8 @@
     <h1
       class="db-warning"
       v-if="!this.$store.state.databaseOnline"
-    >Database Issue!!! Please Start DB</h1>
+    >Database Issue!!! Please Ensure DB is Running</h1>
+    <h1 class="db-warning" v-if="this.$store.state.noResultsFound">No Results Found</h1>
 
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
@@ -42,6 +43,7 @@
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import usmap from "@/assets/us.json";
+import { captureAndProcess } from "@/helpers/captureAndProcessSettings";
 
 // console.log(usmap)
 const states = topojson.feature(usmap, usmap.objects.states);
@@ -68,26 +70,96 @@ export default {
 
     this.sizeChange();
   },
+  mounted() {
+    this.calculateCandidates();
+  },
   computed: {
     cities() {
       return this.$store.state.cities;
     },
+    userLatLon() {
+      return this.$store.state.userLatLon;
+    },
+    closestAirports() {
+      return this.$store.state.closestAirports;
+    },
     budget() {
       return this.$store.state.budget;
     },
-    userLatLon() {
-      return this.$store.state.userLatLon;
+    airlineDisable() {
+      return this.$store.state.airlineDisable;
+    },
+    availability() {
+      return this.$store.state.availability;
+    },
+    tripDuration() {
+      return this.$store.state.tripDuration;
+    },
+    weatherControlOn() {
+      return this.$store.state.weatherControlOn;
+    },
+    userTempRange() {
+      return this.$store.state.userTempRange;
+    },
+    userPrecipRange() {
+      return this.$store.state.userPrecipRange;
+    },
+    selectedActivities() {
+      return this.$store.state.selectedActivities;
+    },
+    selectedFood() {
+      return this.$store.state.selectedFood;
+    },
+    crimeRating() {
+      return this.$store.state.crimeRating;
+    },
+    candidateCities() {
+      return this.$store.state.candidateCities;
     }
   },
   watch: {
     cities() {
       this.draw();
     },
-    budget() {
-      this.draw();
-    },
     userLatLon() {
       this.draw();
+    },
+    closestAirports() {
+      this.calculateCandidates();
+    },
+    budget() {
+      this.draw();
+      this.calculateCandidates();
+    },
+    airlineDisable() {
+      this.calculateCandidates();
+    },
+    availability() {
+      this.calculateCandidates();
+    },
+    tripDuration() {
+      this.calculateCandidates();
+    },
+    weatherControlOn() {
+      this.calculateCandidates();
+    },
+    userTempRange() {
+      this.calculateCandidates();
+    },
+    userPrecipRange() {
+      this.calculateCandidates();
+    },
+    selectedActivities() {
+      this.caclulateCityScores();
+    },
+    selectedFood() {
+      this.caclulateCityScores();
+    },
+    crimeRating() {
+      this.calculateCandidates();
+    },
+    candidateCities() {
+      this.caclulateCityScores();
     }
   },
   methods: {
@@ -131,6 +203,46 @@ export default {
           }
         }
       });
+    },
+
+    calculateCandidates() {
+      if (this.closestAirports.length > 0) {
+        var currentSettings = captureAndProcess(
+          this.candidateCities,
+          this.closestAirports,
+          this.budget,
+          this.airlineDisable,
+          this.availability,
+          this.tripDuration,
+          this.weatherControlOn,
+          this.userTempRange,
+          this.userPrecipRange,
+          this.crimeRating,
+          this.selectedActivities,
+          this.selectedFood
+        );
+
+        this.$store.dispatch("calculateCandidateCities", currentSettings);
+      }
+    },
+    caclulateCityScores() {
+      if (this.candidateCities.length > 0) {
+        var currentSettings = captureAndProcess(
+          this.candidateCities,
+          this.closestAirports,
+          this.budget,
+          this.airlineDisable,
+          this.availability,
+          this.tripDuration,
+          this.weatherControlOn,
+          this.userTempRange,
+          this.userPrecipRange,
+          this.crimeRating,
+          this.selectedActivities,
+          this.selectedFood
+        );
+        this.$store.dispatch("calculateCityScores", currentSettings);
+      }
     }
   }
 };

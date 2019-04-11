@@ -2,19 +2,21 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as axios from "axios";
 import { findClosestAirports } from "@/helpers/find_closest_airports"
+import { ReturnDestinations } from "@/helpers/algorithm"
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     databaseOnline: true,
+    noResultsFound: false,
     showAbout: true,
     userLatLon: [],
-    budget: 1200,
+    budget: 450,
     airlineDisable: false,
-    availability: {startDate:null, endDate:null},
+    availability: { startDate: null, endDate: null },
     tripDuration: 3,
-    tempControlOn: false,
+    weatherControlOn: false,
     simpleTempRanges: {
       lowLow: 0,
       lowHigh: 49,
@@ -32,8 +34,8 @@ export default new Vuex.Store({
       wetHigh: 100
     },
 
-    userTempRange: {low:51, high: 76},
-    userPrecipRange: {low:31, high: 66},
+    userTempRange: { low: 51, high: 76 },
+    userPrecipRange: { low: 31, high: 66 },
 
     activityOptions: {},
     selectedActivities: [],
@@ -41,10 +43,13 @@ export default new Vuex.Store({
     culinaryOptions: [],
     selectedFood: [],
 
-    crimeRating: 600,
-    // give data pre computed.
+    crimeRating: 0,
+
     airPorts: [],
     closestAirports: [],
+
+    candidateCities: [],
+
     cities: [
       {
         code: "SFO",
@@ -261,35 +266,35 @@ export default new Vuex.Store({
       state.airlineDisable = payload
     },
 
-    setAvailabilityMutation(state, payload){
+    setAvailabilityMutation(state, payload) {
       state.availability = payload
     },
 
-    setTripDurationMutation(state, payload){
+    setTripDurationMutation(state, payload) {
       state.tripDuration = payload
     },
 
     setEnableWeatherMutation(state, payload) {
-      state.tempControlOn = payload
+      state.weatherControlOn = payload
     },
 
-    setUserTempRangeMutation(state, payload){
+    setUserTempRangeMutation(state, payload) {
       state.userTempRange = payload
     },
 
-    setUserPrecipRangeMutation(state, payload){
+    setUserPrecipRangeMutation(state, payload) {
       state.userPrecipRange = payload
     },
 
-    setselectedActivitiesMutation(state, payload){
+    setselectedActivitiesMutation(state, payload) {
       state.selectedActivities = payload
     },
 
-    setSelectedCulinaryMutation(state, payload){
+    setSelectedCulinaryMutation(state, payload) {
       state.selectedFood = payload
     },
 
-    setCrimeRatingMutation(state, payload){
+    setCrimeRatingMutation(state, payload) {
       state.crimeRating = payload
     },
 
@@ -302,29 +307,42 @@ export default new Vuex.Store({
       state.closestAirports = closestAirports
     },
 
-    setActivities(state, payload){
+    setActivities(state, payload) {
       var activity_category
       var processed_activities = {}
       payload.forEach((activity) => {
         activity_category = activity.category_activity
-        if( activity_category in processed_activities) {
+        if (activity_category in processed_activities) {
           processed_activities[activity_category].push(activity.activity_name)
         }
-        else{
+        else {
           processed_activities[activity_category] = [activity.activity_name]
         }
-        
+
       })
       state.activityOptions = processed_activities
-      
+
     },
 
-    setCuisineOptionsMutation(state, payload){
+    setCuisineOptionsMutation(state, payload) {
       var collectedFood = []
       payload.forEach((cuisine) => {
         collectedFood.push(cuisine.cuisine)
       })
       state.culinaryOptions = collectedFood
+    },
+
+    setCandidateCities(state, payload) {
+      var collectedCandidates = []
+      if (payload === '') {
+        state.noResultsFound = true
+      } else {
+        payload.forEach((cities) => {
+          collectedCandidates.push(cities.cid)
+        })
+        state.noResultsFound = false
+        state.candidateCities = collectedCandidates
+      }
     }
   },
   actions: {
@@ -340,7 +358,7 @@ export default new Vuex.Store({
       context.commit('setBudgetMutation', payload);
     },
 
-    setAirlineDisable(context, payload){
+    setAirlineDisable(context, payload) {
       context.commit('setAirlineDisableMutation', payload);
     },
 
@@ -388,7 +406,7 @@ export default new Vuex.Store({
       context.commit('setTripDurationMutation', payload)
     },
 
-    setEnableWeather(context, payload){
+    setEnableWeather(context, payload) {
       context.commit('setEnableWeatherMutation', payload);
     },
 
@@ -414,6 +432,40 @@ export default new Vuex.Store({
 
     getClosestAirports(context, payload) {
       context.commit('setClosestAirports', payload)
+    },
+
+    async calculateCandidateCities(context, payload) {
+      // console.log('calculating candidates', payload)
+      try {
+        const response = await axios.get('http://localhost:3000/filteredcandidates', {
+          params: {
+            airlineBudget: payload.airlineBudget,
+            userAirports: payload.closestAirports,
+            availability: payload.availability,
+            minTemp: payload.userTempRange[0],
+            maxTemp: payload.userTempRange[1],
+            minPrecip: payload.userPrecipRange[0],
+            maxPrecip: payload.userPrecipRange[1],
+            maxCrime: payload.crimeRating
+          }
+        });
+        context.commit('setCandidateCities', response.data);
+
+      } catch (error) {
+        context.commit('databaseOnlineStatus', false);
+      }
+    },
+    
+    async calculateCityScores(context, payload) {
+      ReturnDestinations(
+        payload.candidateCities,
+        payload.candidateCitiesString, 
+        payload.availability, 
+        payload.airlineBudget,
+        payload.userTempRange[0],
+        payload.userTempRange[1],
+        payload.userPrecipRange[0],
+        payload.userPrecipRange[1])
     }
   },
 });

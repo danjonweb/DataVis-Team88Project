@@ -16,29 +16,29 @@
               <b-input-group-prepend is-text>
                 <input
                   type="checkbox"
-                  :checked="tempControlOn"
+                  :checked="weatherControlOn"
                   v-on:change="idealChange()"
                   aria-label="Checkbox for following text input"
                 >
               </b-input-group-prepend>
             </b-input-group>
-            <p :hidden="!tempControlOn">Temp-Low: {{low}} Temp-High: {{high}}</p>
-            <p :hidden="!tempControlOn">Precip-Low: {{precipLow}} Precip-High: {{precipHigh}}</p>
+            <p :hidden="!weatherControlOn">Temp-Low: {{low}} Temp-High: {{high}}</p>
+            <p :hidden="!weatherControlOn">Precip-Low: {{precipLow}} Precip-High: {{precipHigh}}</p>
           </div>
 
           <b-button-group class="weather-buttons">
             <b-button
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               @click="setTempRange([simpleTempRanges.lowLow, simpleTempRanges.lowHigh])"
               variant="outline-primary"
             >Cool</b-button>
             <b-button
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               @click="setTempRange([simpleTempRanges.midLow, simpleTempRanges.midHigh])"
               variant="outline-secondary"
             >Mild</b-button>
             <b-button
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               @click="setTempRange([simpleTempRanges.highLow, simpleTempRanges.highHigh])"
               variant="outline-danger"
             >Warm</b-button>
@@ -46,20 +46,20 @@
 
           <b-button-group class="weather-buttons">
             <b-button
-              :disabled="!tempControlOn"
-              @click="setPrecipRange([simplePrecipRanges.wetLow, simplePrecipRanges.wetHigh])"
-              variant="outline-primary"
-            >Wet</b-button>
+              :disabled="!weatherControlOn"
+              @click="setPrecipRange([simplePrecipRanges.dryLow, simplePrecipRanges.dryHigh])"
+              variant="outline-danger"
+            >Dry</b-button>
             <b-button
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               @click="setPrecipRange([simplePrecipRanges.avgLow, simplePrecipRanges.avgHigh])"
               variant="outline-success"
             >Average</b-button>
             <b-button
-              :disabled="!tempControlOn"
-              @click="setPrecipRange([simplePrecipRanges.dryLow, simplePrecipRanges.dryHigh])"
-              variant="outline-danger"
-            >Dry</b-button>
+              :disabled="!weatherControlOn"
+              @click="setPrecipRange([simplePrecipRanges.wetLow, simplePrecipRanges.wetHigh])"
+              variant="outline-primary"
+            >Wet</b-button>
           </b-button-group>
 
           <div class="simp-adv-toggle">
@@ -73,14 +73,14 @@
             <b-input-group-prepend is-text>
               <input
                 type="checkbox"
-                :checked="tempControlOn"
+                :checked="weatherControlOn"
                 v-on:change="idealChange()"
                 aria-label="Checkbox for following text input"
               >
             </b-input-group-prepend>
             <b-form-input
               type="number"
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               :value="idealTemp"
               v-on:change="setTempIdeal($event)"
               aria-label="Text input with checkbox"
@@ -92,7 +92,7 @@
 
             <b-form-input
               type="number"
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               :value="tempTol"
               v-on:change="setTempTol($event)"
               aria-label="Text input with checkbox"
@@ -105,14 +105,14 @@
             <b-input-group-prepend is-text>
               <input
                 type="checkbox"
-                :checked="tempControlOn"
+                :checked="weatherControlOn"
                 v-on:change="idealChange()"
                 aria-label="Checkbox for following text input"
               >
             </b-input-group-prepend>
             <b-form-input
               type="number"
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               :value="idealPrecip"
               v-on:change="setPrecipIdeal($event)"
               aria-label="Text input with checkbox"
@@ -124,7 +124,7 @@
 
             <b-form-input
               type="number"
-              :disabled="!tempControlOn"
+              :disabled="!weatherControlOn"
               :value="precipTol"
               v-on:change="setPrecipTol($event)"
               aria-label="Text input with checkbox"
@@ -147,7 +147,7 @@ export default {
   },
   data: function() {
     return {
-      tempControlOn: this.$store.state.tempControlOn,
+      weatherControlOn: this.$store.state.weatherControlOn,
       tempTol: 15,
       idealTemp: 72,
       precipTol: 10,
@@ -167,8 +167,8 @@ export default {
       return require(`../../assets/${pic}`);
     },
     idealChange() {
-      this.tempControlOn = !this.tempControlOn;
-      this.$store.dispatch("setEnableWeather", this.tempControlOn);
+      this.weatherControlOn = !this.weatherControlOn;
+      this.$store.dispatch("setEnableWeather", this.weatherControlOn);
     },
     expand() {
       this.exapnded = this.weatherExpand;

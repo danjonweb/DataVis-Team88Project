@@ -158,7 +158,7 @@ function ReturnDestinations(
 
     callback, // call back function
 ) {
-    var db = new sqlite3.Database("cityDB.sqlite");
+    var db = new sqlite3.Database("../DataCollection/cityDB.sqlite");
 
     /*
      TODO: Add filters code here. It should returns a list of candidate city ids

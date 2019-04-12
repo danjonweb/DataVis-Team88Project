@@ -18,29 +18,24 @@
         :cy="location.lat"
         :fill="location.color"
         stroke="black"
-        stroke-width="2px"
+        stroke-width="1px"
       >
         <title>{{`City: ${location.city_name} \nScore: ${location.matching_score}`}}</title>
       </circle>
 
-      <circle
-        v-for="mylat in scaledUserLatLon"
-        :key="'homeOuter' + mylat[0]"
-        r="12"
-        :cx="mylat[0]"
-        :cy="mylat[1]"
-        fill="#000"
-      ></circle>
-      <circle
+      <rect
         v-for="mylat in scaledUserLatLon"
         :key="'homeInner' + mylat[0]"
-        r="6"
-        :cx="mylat[0]"
-        :cy="mylat[1]"
+        :width="mylat.sqDim"
+        :height="mylat.sqDim"
+        :x="mylat.location[0] - 1/2*mylat.sqDim"
+        :y="mylat.location[1]- 1/2*mylat.sqDim"
         fill="#28f3d8"
+        stroke="#000"
+        stroke-width="3px"
       >
         <title>Starting Location</title>
-      </circle>
+      </rect>
     </svg>
   </section>
 </template>
@@ -195,7 +190,13 @@ export default {
 
     draw() {
       if (this.userLatLon.length > 0) {
-        this.scaledUserLatLon = [this.projection(this.userLatLon)];
+        let locRadScale = window.innerWidth / 700;
+        this.scaledUserLatLon = [
+          {
+            location: this.projection(this.userLatLon),
+            sqDim: locRadScale * 10
+          }
+        ];
       }
       this.path = d3.geoPath().projection(this.projection);
       this.s = () => this.path(states);
@@ -217,10 +218,12 @@ export default {
         "#D1404D"
       ];
       var count = 0;
-      
+
       if (this.cities.length > 0) {
         let maxScore = this.cities[0].matching_score;
-        let copyCities = JSON.parse(JSON.stringify(this.cities))
+        let copyCities = JSON.parse(JSON.stringify(this.cities));
+
+        let radScale = window.innerWidth / 1200;
         copyCities.forEach(city => {
           var coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {
@@ -228,7 +231,7 @@ export default {
             goodLocation.lng = coords[0];
             goodLocation.lat = coords[1];
 
-            let radius = city.matching_score - maxScore * 0.7;
+            let radius = radScale * (city.matching_score - maxScore * 0.7);
 
             if (radius < 0) {
               radius = 2;

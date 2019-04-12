@@ -12,7 +12,7 @@ export default new Vuex.Store({
     noResultsFound: false,
     showAbout: true,
     userLatLon: [],
-    numResults: 20,
+    numResults: 100,
     budget: 1200,
     airlineDisable: false,
     drivingDistance: 600,

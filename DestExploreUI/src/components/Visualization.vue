@@ -12,7 +12,7 @@
 
       <circle
         v-for="location in locations"
-        :key="location.city_name"
+        :key="location.city_name + location.lat + location.lon"
         :r="location.radius"
         :cx="location.lng"
         :cy="location.lat"

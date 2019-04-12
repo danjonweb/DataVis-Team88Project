@@ -19,7 +19,7 @@
         :fill="location.color"
         stroke="black"
         stroke-width="2px"
-      ></circle>
+      > <title>{{location.city_name}}</title></circle>
 
 
       <circle
@@ -29,7 +29,7 @@
         :cx="mylat[0]"
         :cy="mylat[1]"
         fill="#000"
-      ></circle>
+      > </circle>
       <circle
         v-for="mylat in scaledUserLatLon"
         :key="'homeInner' + mylat[0]"
@@ -37,7 +37,7 @@
         :cx="mylat[0]"
         :cy="mylat[1]"
         fill="#28f3d8"
-      ></circle>
+      ><title>Starting Location</title></circle>
     </svg>
   </section>
 </template>

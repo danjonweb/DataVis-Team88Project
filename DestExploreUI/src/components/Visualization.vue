@@ -1,12 +1,9 @@
 <template>
   <section class="visualization">
-    <h1
-      class="db-warning"
-      v-if="!this.$store.state.databaseOnline"
-    >Database Issue!!! Please Ensure DB is Running</h1>
+    <h1 class="db-warning" v-if="!this.$store.state.databaseOnline">Database Server Not Running</h1>
     <h1 class="calculation" v-if="this.calculating">Calculating...</h1>
     <h1 class="low-budget-warning" v-if="(this.$store.state.noResultsFound)">
-     <strong>No Results:</strong> 
+      <strong>No Results:</strong>
       Ensure your budget is suitable for your trip duration.
       Try reducing Trip Duration or Disable Ariline Travel
     </h1>
@@ -340,7 +337,7 @@ export default {
 
 .db-warning {
   position: absolute;
-  margin: 30vh 0 0 10vw;
+  margin: 1vh 0 0 10vw;
 }
 
 .low-budget-warning {

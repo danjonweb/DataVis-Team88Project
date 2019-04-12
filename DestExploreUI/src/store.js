@@ -223,6 +223,7 @@ export default new Vuex.Store({
     },
 
     setCandidateCities(state, payload) {
+      state.databaseOnline = true
       var collectedCandidates = []
       if (payload === '') {
         state.noResultsFound = true

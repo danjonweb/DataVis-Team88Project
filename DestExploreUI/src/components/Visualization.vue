@@ -19,7 +19,7 @@
         :fill="location.color"
         stroke="black"
         stroke-width="2px"
-      > <title>{{location.city_name}}</title></circle>
+      > <title>{{`City: ${location.city_name} \nScore: ${location.matching_score}`}}</title></circle>
 
 
       <circle

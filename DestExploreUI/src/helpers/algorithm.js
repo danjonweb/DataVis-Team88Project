@@ -1,3 +1,4 @@
+ /* eslint-disable */
 import * as axios from "axios";
 
 export async function ReturnDestinations(
@@ -101,12 +102,12 @@ function computeMeanStdev(list) {
 function convertToList(obj, keyList) {
     let valList = []
     for (let k of keyList) {
-        if (isNaN(obj[k])){
+        if (isNaN(obj[k])) {
             valList.push(0.001)
-        }else{
+        } else {
             valList.push(obj[k])
         }
-        
+
     }
     return valList;
 }
@@ -140,13 +141,13 @@ function rankCandidateCities(
         let featureVals = []
         // iterate through each feature vector
         for (let k of Object.keys(featureMatrix)) {
-            if (featureMatrix[k][feature] !== undefined){
+            if (featureMatrix[k][feature] !== undefined) {
                 featureVals.push(featureMatrix[k][feature])
-            }else{
+            } else {
                 featureVals.push(0)
             }
-            
-            
+
+
         }
 
 
@@ -157,17 +158,17 @@ function rankCandidateCities(
 
         // normalize by subtract mean and divide standard diviation
         for (let k of Object.keys(featureMatrix)) {
-            if (featureMatrix[k][feature] !== undefined){
+            if (featureMatrix[k][feature] !== undefined) {
                 featureMatrix[k][feature] = (featureMatrix[k][feature] - mean) / stdev * userPriority[feature]
-            }else{
-                
+            } else {
+
                 featureMatrix[k][feature] = (0 - mean) / stdev * userPriority[feature]
             }
         }
     }
-    
+
     let userFeatureVector = convertToList(featureMatrix['user'], featureList)
-   
+
     // console.log("user feature vector:", userFeatureVector)
     // compute distance bewteen user feature and candidate features
     let min_dist = null;

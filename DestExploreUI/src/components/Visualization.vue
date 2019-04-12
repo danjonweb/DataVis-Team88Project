@@ -19,8 +19,9 @@
         :fill="location.color"
         stroke="black"
         stroke-width="2px"
-      > <title>{{`City: ${location.city_name} \nScore: ${location.matching_score}`}}</title></circle>
-
+      >
+        <title>{{`City: ${location.city_name} \nScore: ${location.matching_score}`}}</title>
+      </circle>
 
       <circle
         v-for="mylat in scaledUserLatLon"
@@ -29,7 +30,7 @@
         :cx="mylat[0]"
         :cy="mylat[1]"
         fill="#000"
-      > </circle>
+      ></circle>
       <circle
         v-for="mylat in scaledUserLatLon"
         :key="'homeInner' + mylat[0]"
@@ -37,7 +38,9 @@
         :cx="mylat[0]"
         :cy="mylat[1]"
         fill="#28f3d8"
-      ><title>Starting Location</title></circle>
+      >
+        <title>Starting Location</title>
+      </circle>
     </svg>
   </section>
 </template>
@@ -216,7 +219,7 @@ export default {
       var count = 0;
       if (this.cities.length > 0) {
         let maxScore = this.cities[0].matching_score;
-        
+
         this.cities.forEach(city => {
           var coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {

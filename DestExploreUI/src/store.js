@@ -238,7 +238,7 @@ export default new Vuex.Store({
       let confirmed = []
       if (state.airlineDisable) {
         payload.forEach((city) => {
-         
+
           let distance = haversineDistance([city.lat, city.lng], [this.state.userLatLon[1], this.state.userLatLon[0]], true)
           if (distance < this.state.drivingDistance) {
             confirmed.push(city)
@@ -248,9 +248,9 @@ export default new Vuex.Store({
         confirmed = payload
       }
 
-      if(confirmed.length === 0){
+      if (confirmed.length === 0) {
         this.state.noResultsFound = true
-      }else{
+      } else {
         this.state.noResultsFound = false
       }
 
@@ -259,7 +259,7 @@ export default new Vuex.Store({
       } else {
         state.cities = confirmed
       }
-
+      // eslint-disable-next-line
       console.log(state.cities)
 
     }

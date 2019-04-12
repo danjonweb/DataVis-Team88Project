@@ -28,8 +28,6 @@ npm -v
 npm install
 ```
 
-### Move current database file to database directory
-
 ### Start the database server
 ```
 node server.js

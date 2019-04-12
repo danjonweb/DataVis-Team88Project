@@ -17,17 +17,10 @@
         :cx="location.lng"
         :cy="location.lat"
         :fill="location.color"
-      ></circle>
-      <circle
-        v-for="location in locations"
-        :key="location.city_name+'outline'"
-        :r="location.radius"
-        :cx="location.lng"
-        :cy="location.lat"
-        fill="none"
         stroke="black"
         stroke-width="2px"
       ></circle>
+
 
       <circle
         v-for="mylat in scaledUserLatLon"

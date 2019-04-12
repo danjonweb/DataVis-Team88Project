@@ -53,7 +53,7 @@ app.get('/cuisine', (req, res) => {
 
 app.get('/checker', (req, res) => {
     db.all(
-        `PRAGMA table_info(city_weather)`,
+        `SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%'`,
         (err, rows) => {
             if (rows.length > 0) {
                 res.send(rows);
@@ -109,11 +109,16 @@ app.get('/filteredcandidates', (req, res) => {
 
 app.get('/algorithm', (req, res) => {
     var candidateCityIDsArray = req.query.candidateCityIDsArray
+    var candidateCityIDsString = req.query.candidateCityIDsString
+    var closestAirports = req.query.closestAirports
     var priceBudgetAir = parseFloat(req.query.priceBudgetAir)
+    var availabilityString = req.query.availabilityString
     var minTemp = parseFloat(req.query.minTemp)
     var maxTemp = parseFloat(req.query.maxTemp)
     var minPrecip = parseFloat(req.query.minPrecip)
     var maxPrecip = parseFloat(req.query.maxPrecip)
+    var selectedActivities = req.query.selectedActivities
+    var selectedFood = req.query.selectedFood
 
     // initialize map
     var candidateFeatures = {};
@@ -133,19 +138,96 @@ app.get('/algorithm', (req, res) => {
         cuisine: 0, // will be assigned as the max of all candidates
     }
 
-    console.log(candidateFeatures)
-    console.log(userInputFeatures)
-    db.all(
-        `PRAGMA table_info(city_weather)`,
-        (err, rows) => {
-            if (rows.length > 0) {
-                
-                res.send(userInputFeatures);
-            } else {
-                res.send({}); // failed, so return an empty object instead of undefined
-            }
-        }
-    );
+    let callback = function (err, rankedCandidates) {
+        if (err) throw (err, rankedCandidates);
+        // returned destination ranked by their matching scores
+
+        // console.log("Final ranked candidate cities:\n", rankedCandidates)
+    }
+
+    let cityStmt = `select cid, city, lat, lng from cities where cid in (${candidateCityIDsString})`;
+
+    let flightStmt = `select cid, avg(price) as price from 
+    (select a.src, a.dst, a.month, a.price as price, b.cid as cid from
+    (select src, dst, month, price from flight_price_history where 
+    month in (${availabilityString}) and src in (${closestAirports}) and  
+     price < ${priceBudgetAir}) as a
+    inner join
+    (select airport, cid from airport_to_city where cid in (${candidateCityIDsString})) as b
+    on a.dst = b.airport)
+    group by cid`;
+
+    let tempStmt = `select cid, avg(avg_temp) as temp from city_weather 
+            where cid in (${candidateCityIDsString}) and month in (${availabilityString}) group by cid`;
+
+    let precpStmt = `select cid, avg(avg_prcp) as prcp from city_weather 
+            where cid in (${candidateCityIDsString}) and month in (${availabilityString}) group by cid`;
+
+    let activityStmt = `select city_id as cid, sum(activity_number) as activity_number from city_activities 
+            where city_id in (${candidateCityIDsString}) and category_activity in (${selectedActivities})
+            group by city_id`;
+
+    let cuisineStmt = `select city_id as cid, sum(number) as cuisine_number from restaurant_types 
+            where city_id in (${candidateCityIDsString}) and cuisine in (${selectedFood})
+            group by city_id`;
+
+    let crimeStmt = `select cid, cast(crime_ind as decimal) as crime_ind from crime_data 
+            where cid in (${candidateCityIDsString})`;
+
+    // console.log(selectedFood)
+    // console.log(selectedActivities)
+    db.serialize(() => {
+        db.each(cityStmt, function (err, row) {
+            if (err) callback('city', null);
+            candidateFeatures[row.cid].city_name = row.city;
+            candidateFeatures[row.cid].lat = row.lat;
+            candidateFeatures[row.cid].lng = row.lng;
+        });
+
+        db.each(flightStmt, function (err, row) {
+            if (err) callback(err, null);
+            candidateFeatures[row.cid].flight_price = row.price;
+            userInputFeatures.flight_price = Math.min(row.price, userInputFeatures.flight_price)
+        });
+
+        db.each(tempStmt, function (err, row) {
+            if (err) callback('temp', null);
+            candidateFeatures[row.cid].temp = row.temp;
+        });
+
+        db.each(precpStmt, function (err, row) {
+            if (err) callback(err, null);
+            candidateFeatures[row.cid].prcp = row.prcp;
+        });
+
+        db.each(activityStmt, function (err, row) {
+            if (err) callback('activ', null);
+            candidateFeatures[row.cid].activities = row.activity_number;
+            userInputFeatures.activities = Math.max(userInputFeatures.activities, row.activity_number)
+        });
+
+
+        db.each(cuisineStmt, function (err, row) {
+            if (err) callback('cuisine', null);
+            candidateFeatures[row.cid].cuisine = row.cuisine_number;
+            userInputFeatures.cuisine = Math.max(userInputFeatures.cuisine, row.cuisine_number)
+        });
+
+
+        db.each(crimeStmt, function (err, row) {
+            if (err) callback('crime', null);
+            candidateFeatures[row.cid].crime = row.crime_ind;
+            userInputFeatures.crime = Math.min(row.crime_ind, userInputFeatures.crime)
+        }, () => {
+            res.send(
+                {
+                    candidateFeatures: candidateFeatures,
+                    userInputFeatures: userInputFeatures
+                }
+            );
+        });
+
+    })
 });
 
 app.listen(3000, () => {

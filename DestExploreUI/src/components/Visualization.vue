@@ -12,11 +12,21 @@
 
       <circle
         v-for="location in locations"
-        :key="location[0].toString()"
-        r="6"
-        :cx="location[0]"
-        :cy="location[1]"
-        fill="red"
+        :key="location.city_name"
+        :r="location.radius"
+        :cx="location.lng"
+        :cy="location.lat"
+        :fill="location.color"
+      ></circle>
+      <circle
+        v-for="location in locations"
+        :key="location.city_name+'outline'"
+        :r="location.radius"
+        :cx="location.lng"
+        :cy="location.lat"
+        fill="none"
+        stroke="black"
+        stroke-width="2px"
       ></circle>
 
       <circle
@@ -104,8 +114,14 @@ export default {
     userPrecipRange() {
       return this.$store.state.userPrecipRange;
     },
+    activityOptions() {
+      return this.$store.state.activityOptions;
+    },
     selectedActivities() {
       return this.$store.state.selectedActivities;
+    },
+    culinaryOptions() {
+      return this.$store.state.culinaryOptions;
     },
     selectedFood() {
       return this.$store.state.selectedFood;
@@ -128,7 +144,6 @@ export default {
       this.calculateCandidates();
     },
     budget() {
-      this.draw();
       this.calculateCandidates();
     },
     airlineDisable() {
@@ -192,17 +207,49 @@ export default {
 
       this.locations = [];
       this.badLocations = [];
-
-      this.cities.forEach(city => {
-        if (city.cost <= this.budget) {
-          var coords = this.projection([city.lon, city.lat]);
+      let colors = [
+        "#2EC631",
+        "#30C76D",
+        "#32C8A9",
+        "#34AEC9",
+        "#3575CA",
+        "#373DCC",
+        "#6D39CD",
+        "#A83BCE",
+        "#CF3DBC",
+        "#D03F84",
+        "#D1404D"
+      ];
+      var count = 0;
+      if (this.cities.length > 0) {
+        let maxScore = this.cities[0].matching_score;
+        
+        this.cities.forEach(city => {
+          var coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {
-            this.locations.push(coords);
+            let goodLocation = city;
+            goodLocation.lng = coords[0];
+            goodLocation.lat = coords[1];
+
+            let radius = city.matching_score - maxScore * 0.7;
+
+            if (radius < 0) {
+              radius = 2;
+              goodLocation.radius = radius;
+            } else {
+              goodLocation.radius = radius;
+            }
+
+            goodLocation.color = colors[count];
+            this.locations.push(goodLocation);
+            if (count < colors.length - 1) {
+              count += 1;
+            }
           } else {
             this.badLocations.push([city.lat, city.lon]);
           }
-        }
-      });
+        });
+      }
     },
 
     calculateCandidates() {
@@ -219,7 +266,9 @@ export default {
           this.userPrecipRange,
           this.crimeRating,
           this.selectedActivities,
-          this.selectedFood
+          this.activityOptions,
+          this.selectedFood,
+          this.culinaryOptions
         );
 
         this.$store.dispatch("calculateCandidateCities", currentSettings);
@@ -239,7 +288,9 @@ export default {
           this.userPrecipRange,
           this.crimeRating,
           this.selectedActivities,
-          this.selectedFood
+          this.activityOptions,
+          this.selectedFood,
+          this.culinaryOptions
         );
         this.$store.dispatch("calculateCityScores", currentSettings);
       }

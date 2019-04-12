@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import * as axios from "axios";
-import { findClosestAirports } from "@/helpers/find_closest_airports"
+import { findClosestAirports, haversineDistance } from "@/helpers/find_closest_airports"
 import { ReturnDestinations } from "@/helpers/algorithm"
 
 Vue.use(Vuex);
@@ -12,8 +12,10 @@ export default new Vuex.Store({
     noResultsFound: false,
     showAbout: true,
     userLatLon: [],
-    budget: 450,
+    numResults: 20,
+    budget: 1200,
     airlineDisable: false,
+    drivingDistance: 600,
     availability: { startDate: null, endDate: null },
     tripDuration: 3,
     weatherControlOn: false,
@@ -27,15 +29,15 @@ export default new Vuex.Store({
     },
     simplePrecipRanges: {
       dryLow: 0,
-      dryHigh: 30,
-      avgLow: 31,
-      avgHigh: 66,
-      wetLow: 67,
+      dryHigh: 2,
+      avgLow: 3,
+      avgHigh: 25,
+      wetLow: 26,
       wetHigh: 100
     },
 
-    userTempRange: { low: 51, high: 76 },
-    userPrecipRange: { low: 31, high: 66 },
+    userTempRange: { low: 50, high: 77 },
+    userPrecipRange: { low: 2, high: 25 },
 
     activityOptions: {},
     selectedActivities: [],
@@ -43,127 +45,14 @@ export default new Vuex.Store({
     culinaryOptions: [],
     selectedFood: [],
 
-    crimeRating: 0,
+    crimeRating: 200,
 
     airPorts: [],
     closestAirports: [],
 
     candidateCities: [],
 
-    cities: [
-      {
-        code: "SFO",
-        city: "San Francisco",
-        country: "USA",
-        lat: "37.7576793",
-        lon: "-122.5076401",
-        cost: 0
-      },
-      {
-        code: "NYC",
-        city: "New York",
-        country: "USA",
-        lat: "40.6971478",
-        lon: "-74.2605541",
-        cost: 3700.0
-      },
-      {
-        code: "MCO",
-        city: "Orlando",
-        country: "USA",
-        lat: "28.4810968",
-        lon: "-81.5091793",
-        cost: 2000.0
-      },
-      {
-        code: "LAX",
-        city: "Los Angeles",
-        country: "USA",
-        lat: "34.0201597",
-        lon: "-118.6926093",
-        cost: 700.0
-      },
-      {
-        code: "PIT",
-        city: "Pittsburg",
-        country: "USA",
-        lat: "40.4312835",
-        lon: "-80.1209284",
-        cost: 1700.0
-      },
-      {
-        code: "SEA",
-        city: "Seattle",
-        country: "USA",
-        lat: "47.6129428",
-        lon: "-122.4824913",
-        cost: 900.0
-      },
-      {
-        code: "ANK",
-        city: "Anchorage",
-        country: "USA",
-        lat: "61.1042033",
-        lon: "-150.5639306",
-        cost: 4000.0
-      },
-      {
-        code: "HON",
-        city: "Honolulu",
-        country: "USA",
-        lat: "21.3279755",
-        lon: "-157.939503",
-        cost: 4500.0
-      },
-      {
-        code: "BLX",
-        city: "Biloxi",
-        country: "USA",
-        lat: "30.4265027",
-        lon: "-88.9958055",
-        cost: 1200.0
-      },
-      {
-        code: "BLD",
-        city: "Boulder",
-        country: "USA",
-        lat: "40.0292887",
-        lon: "-105.3101892",
-        cost: 950.0
-      },
-      {
-        code: "MIA",
-        city: "Miami",
-        country: "USA",
-        lat: "25.7825453",
-        lon: "-80.299499",
-        cost: 3000.0
-      },
-      {
-        code: "ALB",
-        city: "Albany",
-        country: "USA",
-        lat: "42.6681893",
-        lon: "-73.8807211",
-        cost: 2700.0
-      },
-      {
-        code: "AUS",
-        city: "Austin",
-        country: "USA",
-        lat: "30.3080553",
-        lon: "-98.0335947",
-        cost: 1000
-      },
-      {
-        code: "RAL",
-        city: "Raleigh",
-        country: "USA",
-        lat: "35.843965",
-        lon: "-78.7851415",
-        cost: 3800.0
-      }
-    ],
+    cities: [],
 
     members: [
       {
@@ -303,7 +192,7 @@ export default new Vuex.Store({
     },
 
     setClosestAirports(state, payload) {
-      var closestAirports = findClosestAirports(payload, state.airPorts, 5, 1000)
+      var closestAirports = findClosestAirports(payload, state.airPorts, 3, 1000)
       state.closestAirports = closestAirports
     },
 
@@ -341,9 +230,40 @@ export default new Vuex.Store({
           collectedCandidates.push(cities.cid)
         })
         state.noResultsFound = false
-        state.candidateCities = collectedCandidates
+        state.candidateCities = collectedCandidates.slice(0, 950)
       }
+    },
+
+    setCities(state, payload) {
+      let confirmed = []
+      if (state.airlineDisable) {
+        payload.forEach((city) => {
+         
+          let distance = haversineDistance([city.lat, city.lng], [this.state.userLatLon[1], this.state.userLatLon[0]], true)
+          if (distance < this.state.drivingDistance) {
+            confirmed.push(city)
+          }
+        })
+      } else {
+        confirmed = payload
+      }
+
+      if(confirmed.length === 0){
+        this.state.noResultsFound = true
+      }else{
+        this.state.noResultsFound = false
+      }
+
+      if (confirmed.length > state.numResults) {
+        state.cities = confirmed.slice(0, state.numResults)
+      } else {
+        state.cities = confirmed
+      }
+
+      console.log(state.cities)
+
     }
+
   },
   actions: {
     showHideAboutAction(context, payload) {
@@ -455,17 +375,25 @@ export default new Vuex.Store({
         context.commit('databaseOnlineStatus', false);
       }
     },
-    
+
     async calculateCityScores(context, payload) {
-      ReturnDestinations(
+
+      let RankedCities = await ReturnDestinations(
         payload.candidateCities,
-        payload.candidateCitiesString, 
-        payload.availability, 
+        payload.candidateCitiesString,
+        payload.closestAirports,
+        payload.availability,
         payload.airlineBudget,
         payload.userTempRange[0],
         payload.userTempRange[1],
         payload.userPrecipRange[0],
-        payload.userPrecipRange[1])
+        payload.userPrecipRange[1],
+        payload.selectedActivities,
+        payload.selectedFood
+      )
+
+      context.commit('setCities', RankedCities)
     }
+
   },
 });

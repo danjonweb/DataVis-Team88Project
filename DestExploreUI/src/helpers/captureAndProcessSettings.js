@@ -13,13 +13,16 @@ export function captureAndProcess(
     userPrecipRange,
     crimeRating,
     selectedActivities,
-    selectedFood
+    activityOptions,
+    selectedFood,
+    culinaryOptions
 ) {
     var airportQstring;
     var availabilityQstring;
     var temperatureRange;
     var precipitationRange;
-
+    var srcCuisineCondition
+    var srcActivityCondition
     // Get airport query ready
     var airportList = [];
     closestAirports.forEach(airport => {
@@ -58,7 +61,7 @@ export function captureAndProcess(
     // process weather if enabled or set to default
     if (!weatherControlOn) {
         temperatureRange = [-5, 100];
-        precipitationRange = [0, 100];
+        precipitationRange = [0, 50];
     } else {
         temperatureRange = [userTempRange.low, userTempRange.high];
         precipitationRange = [userPrecipRange.low, userPrecipRange.high];
@@ -66,6 +69,21 @@ export function captureAndProcess(
 
     // process city ids
     let candidateCityQString = "'" + candidateCities.join("', '") + "'";
+    
+    // process activities list
+    if (selectedActivities.length < 1){
+        srcActivityCondition = "'" + Object.keys(activityOptions).join("','") + "'";
+    }else{
+        srcActivityCondition = "'" + selectedActivities.join("','") + "'";
+    }
+
+    // process food list
+    if (selectedFood.length < 1){
+        srcCuisineCondition = "'" + culinaryOptions.join("','") + "'";
+    }else{
+        srcCuisineCondition = "'" + selectedFood.join("','") + "'";
+    }
+    
 
     return {
         candidateCitiesString: candidateCityQString,
@@ -80,8 +98,8 @@ export function captureAndProcess(
         userTempRange: temperatureRange,
         userPrecipRange: precipitationRange,
         crimeRating: crimeRating,
-        selectedActivities: selectedActivities,
-        selectedFood: selectedFood
+        selectedActivities: srcActivityCondition,
+        selectedFood: srcCuisineCondition
     };
 
 }

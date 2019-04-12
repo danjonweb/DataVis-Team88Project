@@ -217,10 +217,11 @@ export default {
         "#D1404D"
       ];
       var count = 0;
+      
       if (this.cities.length > 0) {
         let maxScore = this.cities[0].matching_score;
-
-        this.cities.forEach(city => {
+        let copyCities = JSON.parse(JSON.stringify(this.cities))
+        copyCities.forEach(city => {
           var coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {
             let goodLocation = city;

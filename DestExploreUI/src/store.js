@@ -38,7 +38,7 @@ export default new Vuex.Store({
     },
 
     userTempRange: { low: 50, high: 77 },
-    userPrecipRange: { low: 2, high: 25 },
+    userPrecipRange: { low: 3, high: 25 },
 
     activityOptions: {},
     selectedActivities: [],

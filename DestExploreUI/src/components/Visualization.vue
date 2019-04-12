@@ -6,8 +6,8 @@
     >Database Issue!!! Please Ensure DB is Running</h1>
     <h1 class="calculation" v-if="this.calculating">Calculating...</h1>
     <h1 class="low-budget-warning" v-if="(this.$store.state.noResultsFound)">
-      No Results
-      Ensure Your Budget is Suitable for Trip Duration
+     <strong>No Results:</strong> 
+      Ensure your budget is suitable for your trip duration.
       Try reducing Trip Duration or Disable Ariline Travel
     </h1>
 
@@ -346,8 +346,8 @@ export default {
 .low-budget-warning {
   color: #2d3030;
   position: absolute;
-  font-size: calc(3vmin + 10px);
-  width: 70vw;
+  font-size: calc(2vmin + 10px);
+  width: 90vw;
   margin: 5px 10px;
 }
 
@@ -361,6 +361,14 @@ export default {
   .fuller {
     width: 100%;
     height: 90vh;
+  }
+
+  .low-budget-warning {
+    color: #2d3030;
+    position: absolute;
+    font-size: calc(2vmin + 10px);
+    width: 60vw;
+    margin: 5px 10px;
   }
 }
 </style>

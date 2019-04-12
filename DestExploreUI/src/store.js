@@ -14,6 +14,7 @@ export default new Vuex.Store({
     userLatLon: [],
     numResults: 100,
     budget: 1200,
+    dailySpend: 120,
     airlineDisable: false,
     drivingDistance: 600,
     availability: { startDate: null, endDate: null },

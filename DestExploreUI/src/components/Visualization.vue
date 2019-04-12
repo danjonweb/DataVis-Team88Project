@@ -4,7 +4,12 @@
       class="db-warning"
       v-if="!this.$store.state.databaseOnline"
     >Database Issue!!! Please Ensure DB is Running</h1>
-    <h1 class="db-warning" v-if="this.$store.state.noResultsFound">No Results Found</h1>
+    <h1 class="calculation" v-if="this.calculating">Calculating...</h1>
+    <h1 class="low-budget-warning" v-if="(this.$store.state.noResultsFound)">
+      No Results
+      Ensure Your Budget is Suitable for Trip Duration
+      Try reducing Trip Duration or Disable Ariline Travel
+    </h1>
 
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
@@ -57,7 +62,21 @@ export default {
     return {
       s: null,
       path: null,
-      scaledUserLatLon: []
+      scaledUserLatLon: [],
+      dotColors: [
+        "#2EC631",
+        "#30C76D",
+        "#32C8A9",
+        "#34AEC9",
+        "#3575CA",
+        "#373DCC",
+        "#6D39CD",
+        "#A83BCE",
+        "#CF3DBC",
+        "#D03F84",
+        "#D1404D"
+      ],
+      calculating: true
     };
   },
   beforeMount() {
@@ -86,6 +105,9 @@ export default {
     },
     budget() {
       return this.$store.state.budget;
+    },
+    dailySpend() {
+      return this.$store.state.dailySpend;
     },
     airlineDisable() {
       return this.$store.state.airlineDisable;
@@ -137,6 +159,9 @@ export default {
     budget() {
       this.calculateCandidates();
     },
+    dailySpend() {
+      this.calculateCandidates();
+    },
     airlineDisable() {
       this.calculateCandidates();
     },
@@ -170,7 +195,7 @@ export default {
   },
   methods: {
     sizeChange() {
-      var ratio = window.innerWidth / window.innerHeight;
+      let ratio = window.innerWidth / window.innerHeight;
       if (ratio < 1.8 && ratio > 1) {
         this.projection
           .scale(0.9 * window.innerWidth)
@@ -189,6 +214,8 @@ export default {
     },
 
     draw() {
+      this.calculating = false;
+
       if (this.userLatLon.length > 0) {
         let locRadScale = window.innerWidth / 700;
         this.scaledUserLatLon = [
@@ -204,20 +231,8 @@ export default {
 
       this.locations = [];
       this.badLocations = [];
-      let colors = [
-        "#2EC631",
-        "#30C76D",
-        "#32C8A9",
-        "#34AEC9",
-        "#3575CA",
-        "#373DCC",
-        "#6D39CD",
-        "#A83BCE",
-        "#CF3DBC",
-        "#D03F84",
-        "#D1404D"
-      ];
-      var count = 0;
+
+      let count = 0;
 
       if (this.cities.length > 0) {
         let maxScore = this.cities[0].matching_score;
@@ -225,7 +240,7 @@ export default {
 
         let radScale = window.innerWidth / 1200;
         copyCities.forEach(city => {
-          var coords = this.projection([city.lng, city.lat]);
+          let coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {
             let goodLocation = city;
             goodLocation.lng = coords[0];
@@ -240,9 +255,9 @@ export default {
               goodLocation.radius = radius;
             }
 
-            goodLocation.color = colors[count];
+            goodLocation.color = this.dotColors[count];
             this.locations.push(goodLocation);
-            if (count < colors.length - 1) {
+            if (count < this.dotColors.length - 1) {
               count += 1;
             }
           } else {
@@ -254,10 +269,11 @@ export default {
 
     calculateCandidates() {
       if (this.closestAirports.length > 0) {
-        var currentSettings = captureAndProcess(
+        let currentSettings = captureAndProcess(
           this.candidateCities,
           this.closestAirports,
           this.budget,
+          this.dailySpend,
           this.airlineDisable,
           this.availability,
           this.tripDuration,
@@ -275,11 +291,13 @@ export default {
       }
     },
     caclulateCityScores() {
+      this.calculating = true;
       if (this.candidateCities.length > 0) {
-        var currentSettings = captureAndProcess(
+        let currentSettings = captureAndProcess(
           this.candidateCities,
           this.closestAirports,
           this.budget,
+          this.dailySpend,
           this.airlineDisable,
           this.availability,
           this.tripDuration,
@@ -313,9 +331,24 @@ export default {
   height: 58vh;
 }
 
+.calculation {
+  position: absolute;
+  width: 75vw;
+  font-size: calc(3vmin + 10px);
+  margin: 5px 0px;
+}
+
 .db-warning {
   position: absolute;
   margin: 30vh 0 0 10vw;
+}
+
+.low-budget-warning {
+  color: #2d3030;
+  position: absolute;
+  font-size: calc(3vmin + 10px);
+  width: 70vw;
+  margin: 5px 10px;
 }
 
 @media (orientation: landscape), (min-width: 733px) {

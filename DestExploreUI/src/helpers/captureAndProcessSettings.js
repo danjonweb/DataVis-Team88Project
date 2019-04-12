@@ -5,6 +5,7 @@ export function captureAndProcess(
     candidateCities,
     closestAirports,
     budget,
+    dailySpend,
     airlineDisable,
     availability,
     tripDuration,
@@ -23,6 +24,16 @@ export function captureAndProcess(
     var precipitationRange;
     var srcCuisineCondition
     var srcActivityCondition
+    var airlineBudget
+
+    // Get budget ready
+    if (airlineDisable) {
+        airlineBudget = budget
+    }else{
+        airlineBudget = budget - tripDuration*dailySpend
+    }
+     
+
     // Get airport query ready
     var airportList = [];
     closestAirports.forEach(airport => {
@@ -90,7 +101,7 @@ export function captureAndProcess(
         candidateCities: candidateCities,
         closestAirports: airportQstring,
         budget: budget,
-        airlineBudget: budget*0.4,
+        airlineBudget: airlineBudget,
         airlineDisable: airlineDisable,
         availability: availabilityQstring,
         tripDuration: tripDuration,

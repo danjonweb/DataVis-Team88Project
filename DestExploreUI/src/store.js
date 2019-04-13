@@ -81,12 +81,9 @@ export default new Vuex.Store({
       },
       {
         name: 'Schultz, Chris',
-        info: 'Lorem ipsum dolor sit amet, \
-        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut \
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud \
-        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum \
-        dolore eu fugiat nulla pariatur.'
+        info: 'Research Engineer at Levi Strauss, \
+        6 classes into the OMSCS program with a focus on Machine Learning. \
+        Enjoys bringing interactivity to powerful algorithmic techniques.'
       },
       {
         name: 'Weber, Dan',
@@ -235,7 +232,7 @@ export default new Vuex.Store({
     setCities(state, payload) {
       let confirmed = []
       // eslint-disable-next-line
-      console.log(`cid,city_name,activities,crime,cuisine,distance,flight_price,lat,lng,matching_score,prcp,temp`)
+      // console.log(`cid,city_name,activities,crime,cuisine,distance,flight_price,lat,lng,matching_score,prcp,temp`)
       if (state.airlineDisable) {
         payload.forEach((city) => {
 
@@ -257,19 +254,19 @@ export default new Vuex.Store({
       if (confirmed.length > state.numResults) {
         state.cities = confirmed.slice(0, state.numResults)
 
-        state.cities.forEach((city) => {
-          // eslint-disable-next-line
-          console.log(`${city.cid},${city.city_name},${city.activities},${city.crime},${city.cuisine},${city.distance},${city.flight_price},${city.lat},${city.lng},${city.matching_score},${city.prcp},${city.temp}`)
-        })
+        // state.cities.forEach((city) => {
+        // eslint-disable-next-line
+        // console.log(`${city.cid},${city.city_name},${city.activities},${city.crime},${city.cuisine},${city.distance},${city.flight_price},${city.lat},${city.lng},${city.matching_score},${city.prcp},${city.temp}`)
+        // })
       } else {
         state.cities = confirmed
-        state.cities.forEach((city) => {
-          // eslint-disable-next-line
-          console.log(`${city.cid},${city.city_name},${city.activities},${city.crime},${city.cuisine},${city.distance},${city.flight_price},${city.lat},${city.lng},${city.matching_score},${city.prcp},${city.temp}`)
-        })
+        // state.cities.forEach((city) => {
+        // eslint-disable-next-line
+        // console.log(`${city.cid},${city.city_name},${city.activities},${city.crime},${city.cuisine},${city.distance},${city.flight_price},${city.lat},${city.lng},${city.matching_score},${city.prcp},${city.temp}`)
+        // })
       }
-      // // eslint-disable-next-line
-      // console.log(state.cities)
+      // eslint-disable-next-line
+      console.log(state.cities)
 
     }
 

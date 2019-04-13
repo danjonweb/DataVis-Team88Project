@@ -235,18 +235,20 @@ export default {
         let maxScore = this.cities[0].matching_score;
         let copyCities = JSON.parse(JSON.stringify(this.cities));
 
-        let radScale = window.innerWidth / 1200;
+        let radScale = window.innerWidth / 1900;
         copyCities.forEach(city => {
           let coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {
             let goodLocation = city;
             goodLocation.lng = coords[0];
             goodLocation.lat = coords[1];
+            goodLocation.matching_score =
+              Math.round(goodLocation.matching_score * 100) / 100;
 
             let radius = radScale * (city.matching_score - maxScore * 0.7);
 
-            if (radius < 0) {
-              radius = 2;
+            if (radius < 4) {
+              radius = 4;
               goodLocation.radius = radius;
             } else {
               goodLocation.radius = radius;

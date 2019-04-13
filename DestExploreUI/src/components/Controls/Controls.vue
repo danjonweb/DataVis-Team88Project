@@ -96,18 +96,15 @@ export default {
 .inputLocation {
   height: 13vh;
   margin: 2vh 0 0 1vw;
-
 }
 
-.card-header{
+.card-header {
   padding: 0;
   margin: 0;
+  height: 28vh;
   background-color: rgb(121, 129, 129);
   overflow: auto;
-  
 }
-
-
 
 .card-body {
   padding: 0;
@@ -125,6 +122,13 @@ export default {
     -webkit-box-shadow: 0px 1px 29px -6px rgba(71, 71, 71, 1);
     -moz-box-shadow: 0px 1px 29px -6px rgba(71, 71, 71, 1);
     box-shadow: 0px 1px 29px -6px rgba(71, 71, 71, 1);
+  }
+  .card-header {
+    padding: 0;
+    margin: 0;
+    height: unset;
+    background-color: rgb(121, 129, 129);
+    overflow: auto;
   }
 }
 </style>

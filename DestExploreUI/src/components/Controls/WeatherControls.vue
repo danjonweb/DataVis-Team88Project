@@ -156,10 +156,10 @@ export default {
       simple: true,
       simpleTempRanges: this.$store.state.simpleTempRanges,
       simplePrecipRanges: this.$store.state.simplePrecipRanges,
-      low: 51,
-      high: 76,
-      precipLow: 31,
-      precipHigh: 66
+      low: 50,
+      high: 77,
+      precipLow: 3,
+      precipHigh: 25
     };
   },
   methods: {

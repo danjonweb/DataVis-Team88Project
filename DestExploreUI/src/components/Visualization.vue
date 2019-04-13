@@ -1,10 +1,12 @@
 <template>
   <section class="visualization">
-    <h1
-      class="db-warning"
-      v-if="!this.$store.state.databaseOnline"
-    >Database Issue!!! Please Ensure DB is Running</h1>
-    <h1 class="db-warning" v-if="this.$store.state.noResultsFound">No Results Found</h1>
+    <h1 class="db-warning" v-if="!this.$store.state.databaseOnline">Database Server Not Running</h1>
+    <h1 class="calculation" v-if="this.calculating">Calculating...</h1>
+    <h1 class="low-budget-warning" v-if="(this.$store.state.noResultsFound)">
+      <strong>No Results:</strong>
+      Ensure your budget is suitable for your trip duration.
+      Try reducing Trip Duration or Disable Ariline Travel
+    </h1>
 
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
@@ -12,29 +14,30 @@
 
       <circle
         v-for="location in locations"
-        :key="location[0].toString()"
-        r="6"
-        :cx="location[0]"
-        :cy="location[1]"
-        fill="red"
-      ></circle>
+        :key="location.city_name + location.lat + location.lon"
+        :r="location.radius"
+        :cx="location.lng"
+        :cy="location.lat"
+        :fill="location.color"
+        stroke="black"
+        stroke-width="1px"
+      >
+        <title>{{`City: ${location.city_name}\nState: ${location.state} \nScore: ${location.matching_score}`}}</title>
+      </circle>
 
-      <circle
-        v-for="mylat in scaledUserLatLon"
-        :key="'homeOuter' + mylat[0]"
-        r="12"
-        :cx="mylat[0]"
-        :cy="mylat[1]"
-        fill="#000"
-      ></circle>
-      <circle
+      <rect
         v-for="mylat in scaledUserLatLon"
         :key="'homeInner' + mylat[0]"
-        r="6"
-        :cx="mylat[0]"
-        :cy="mylat[1]"
+        :width="mylat.sqDim"
+        :height="mylat.sqDim"
+        :x="mylat.location[0] - 1/2*mylat.sqDim"
+        :y="mylat.location[1]- 1/2*mylat.sqDim"
         fill="#28f3d8"
-      ></circle>
+        stroke="#000"
+        stroke-width="3px"
+      >
+        <title>Starting Location</title>
+      </rect>
     </svg>
   </section>
 </template>
@@ -56,7 +59,21 @@ export default {
     return {
       s: null,
       path: null,
-      scaledUserLatLon: []
+      scaledUserLatLon: [],
+      dotColors: [
+        "#2EC631",
+        "#30C76D",
+        "#32C8A9",
+        "#34AEC9",
+        "#3575CA",
+        "#373DCC",
+        "#6D39CD",
+        "#A83BCE",
+        "#CF3DBC",
+        "#D03F84",
+        "#D1404D"
+      ],
+      calculating: true
     };
   },
   beforeMount() {
@@ -86,6 +103,9 @@ export default {
     budget() {
       return this.$store.state.budget;
     },
+    dailySpend() {
+      return this.$store.state.dailySpend;
+    },
     airlineDisable() {
       return this.$store.state.airlineDisable;
     },
@@ -104,8 +124,14 @@ export default {
     userPrecipRange() {
       return this.$store.state.userPrecipRange;
     },
+    activityOptions() {
+      return this.$store.state.activityOptions;
+    },
     selectedActivities() {
       return this.$store.state.selectedActivities;
+    },
+    culinaryOptions() {
+      return this.$store.state.culinaryOptions;
     },
     selectedFood() {
       return this.$store.state.selectedFood;
@@ -128,7 +154,9 @@ export default {
       this.calculateCandidates();
     },
     budget() {
-      this.draw();
+      this.calculateCandidates();
+    },
+    dailySpend() {
       this.calculateCandidates();
     },
     airlineDisable() {
@@ -164,7 +192,7 @@ export default {
   },
   methods: {
     sizeChange() {
-      var ratio = window.innerWidth / window.innerHeight;
+      let ratio = window.innerWidth / window.innerHeight;
       if (ratio < 1.8 && ratio > 1) {
         this.projection
           .scale(0.9 * window.innerWidth)
@@ -183,8 +211,16 @@ export default {
     },
 
     draw() {
+      this.calculating = false;
+
       if (this.userLatLon.length > 0) {
-        this.scaledUserLatLon = [this.projection(this.userLatLon)];
+        let locRadScale = window.innerWidth / 700;
+        this.scaledUserLatLon = [
+          {
+            location: this.projection(this.userLatLon),
+            sqDim: locRadScale * 10
+          }
+        ];
       }
       this.path = d3.geoPath().projection(this.projection);
       this.s = () => this.path(states);
@@ -193,24 +229,50 @@ export default {
       this.locations = [];
       this.badLocations = [];
 
-      this.cities.forEach(city => {
-        if (city.cost <= this.budget) {
-          var coords = this.projection([city.lon, city.lat]);
+      let count = 0;
+
+      if (this.cities.length > 0) {
+        let maxScore = this.cities[0].matching_score;
+        let copyCities = JSON.parse(JSON.stringify(this.cities));
+
+        let radScale = window.innerWidth / 1900;
+        copyCities.forEach(city => {
+          let coords = this.projection([city.lng, city.lat]);
           if (coords != undefined) {
-            this.locations.push(coords);
+            let goodLocation = city;
+            goodLocation.lng = coords[0];
+            goodLocation.lat = coords[1];
+            goodLocation.matching_score =
+              Math.round(goodLocation.matching_score * 100) / 100;
+
+            let radius = radScale * (city.matching_score - maxScore * 0.7);
+
+            if (radius < 4) {
+              radius = 4;
+              goodLocation.radius = radius;
+            } else {
+              goodLocation.radius = radius;
+            }
+
+            goodLocation.color = this.dotColors[count];
+            this.locations.push(goodLocation);
+            if (count < this.dotColors.length - 1) {
+              count += 1;
+            }
           } else {
             this.badLocations.push([city.lat, city.lon]);
           }
-        }
-      });
+        });
+      }
     },
 
     calculateCandidates() {
       if (this.closestAirports.length > 0) {
-        var currentSettings = captureAndProcess(
+        let currentSettings = captureAndProcess(
           this.candidateCities,
           this.closestAirports,
           this.budget,
+          this.dailySpend,
           this.airlineDisable,
           this.availability,
           this.tripDuration,
@@ -219,18 +281,22 @@ export default {
           this.userPrecipRange,
           this.crimeRating,
           this.selectedActivities,
-          this.selectedFood
+          this.activityOptions,
+          this.selectedFood,
+          this.culinaryOptions
         );
 
         this.$store.dispatch("calculateCandidateCities", currentSettings);
       }
     },
     caclulateCityScores() {
+      this.calculating = true;
       if (this.candidateCities.length > 0) {
-        var currentSettings = captureAndProcess(
+        let currentSettings = captureAndProcess(
           this.candidateCities,
           this.closestAirports,
           this.budget,
+          this.dailySpend,
           this.airlineDisable,
           this.availability,
           this.tripDuration,
@@ -239,7 +305,9 @@ export default {
           this.userPrecipRange,
           this.crimeRating,
           this.selectedActivities,
-          this.selectedFood
+          this.activityOptions,
+          this.selectedFood,
+          this.culinaryOptions
         );
         this.$store.dispatch("calculateCityScores", currentSettings);
       }
@@ -262,9 +330,24 @@ export default {
   height: 58vh;
 }
 
+.calculation {
+  position: absolute;
+  width: 75vw;
+  font-size: calc(3vmin + 10px);
+  margin: 5px 0px;
+}
+
 .db-warning {
   position: absolute;
-  margin: 30vh 0 0 10vw;
+  margin: 1vh 0 0 10vw;
+}
+
+.low-budget-warning {
+  color: #2d3030;
+  position: absolute;
+  font-size: calc(2vmin + 10px);
+  width: 90vw;
+  margin: 5px 10px;
 }
 
 @media (orientation: landscape), (min-width: 733px) {
@@ -277,6 +360,14 @@ export default {
   .fuller {
     width: 100%;
     height: 90vh;
+  }
+
+  .low-budget-warning {
+    color: #2d3030;
+    position: absolute;
+    font-size: calc(2vmin + 10px);
+    width: 60vw;
+    margin: 5px 10px;
   }
 }
 </style>

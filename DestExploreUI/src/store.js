@@ -238,6 +238,8 @@ export default new Vuex.Store({
 
     setCities(state, payload) {
       let confirmed = []
+      // eslint-disable-next-line
+      console.log(`cid,city_name,activities,crime,cuisine,distance,flight_price,lat,lng,matching_score,prcp,temp`)
       if (state.airlineDisable) {
         payload.forEach((city) => {
 
@@ -258,11 +260,20 @@ export default new Vuex.Store({
 
       if (confirmed.length > state.numResults) {
         state.cities = confirmed.slice(0, state.numResults)
+
+        state.cities.forEach((city) => {
+          // eslint-disable-next-line
+          console.log(`${city.cid},${city.city_name},${city.activities},${city.crime},${city.cuisine},${city.distance},${city.flight_price},${city.lat},${city.lng},${city.matching_score},${city.prcp},${city.temp}`)
+        })
       } else {
         state.cities = confirmed
+        state.cities.forEach((city) => {
+          // eslint-disable-next-line
+          console.log(`${city.cid},${city.city_name},${city.activities},${city.crime},${city.cuisine},${city.distance},${city.flight_price},${city.lat},${city.lng},${city.matching_score},${city.prcp},${city.temp}`)
+        })
       }
-      // eslint-disable-next-line
-      console.log(state.cities)
+      // // eslint-disable-next-line
+      // console.log(state.cities)
 
     }
 

@@ -10,7 +10,8 @@ https://nodejs.org/en/
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 #### To confrim your are ready
-Typing the following two commands into terminal should return version numbers.  Note that Version 10.12.0 EXACTLY is required
+Typing the following two commands into terminal should return version numbers.  
+Note that Node version 10.12.0 EXACTLY is required
 ```
 node -v
 v10.12.0

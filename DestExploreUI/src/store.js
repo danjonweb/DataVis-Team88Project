@@ -12,7 +12,7 @@ export default new Vuex.Store({
     noResultsFound: false,
     showAbout: true,
     userLatLon: [],
-    numResults: 100,
+    numResults: 5,
     budget: 1200,
     dailySpend: 120,
     airlineDisable: false,
@@ -67,12 +67,8 @@ export default new Vuex.Store({
       },
       {
         name: 'Hermez, Celestin',
-        info: 'Lorem ipsum dolor sit amet, \
-        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut \
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud \
-        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum \
-        dolore eu fugiat nulla pariatur.'
+        info: 'Data Scientist in Digital Advertising, first semester in OMSA program. He enjoyed combining the \
+        algorithm with the front-end aspect, and seeing a project from start to finish.'
       },
       {
         name: 'Paul, Deborah',

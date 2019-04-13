@@ -99,11 +99,11 @@ export default new Vuex.Store({
     docs: [
       {
         name: 'Proposal Doc',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit?usp=sharing'
       },
       {
         name: 'Proposal Presentation',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        link: 'https://docs.google.com/presentation/d/1V3CTYqQaXwWKIdJh_GlczySb6R4C_XdsWmln71MIrEg/edit?usp=sharing'
       },
       {
         name: 'Proposal Video',
@@ -123,7 +123,7 @@ export default new Vuex.Store({
       },
       {
         name: 'Code Repository',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        link: 'https://github.com/SchultzC/DataVis-Team88Project'
       },
     ]
 

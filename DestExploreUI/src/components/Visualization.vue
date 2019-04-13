@@ -22,7 +22,7 @@
         stroke="black"
         stroke-width="1px"
       >
-        <title>{{`City: ${location.city_name} \nScore: ${location.matching_score}`}}</title>
+        <title>{{`City: ${location.city_name}\nState: ${location.state} \nScore: ${location.matching_score}`}}</title>
       </circle>
 
       <rect

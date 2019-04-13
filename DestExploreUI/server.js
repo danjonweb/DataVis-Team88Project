@@ -51,9 +51,22 @@ app.get('/cuisine', (req, res) => {
     );
 });
 
-app.get('/checker', (req, res) => {
+app.get('/tables', (req, res) => {
     db.all(
         `SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%'`,
+        (err, rows) => {
+            if (rows.length > 0) {
+                res.send(rows);
+            } else {
+                res.send({}); // failed, so return an empty object instead of undefined
+            }
+        }
+    );
+});
+
+app.get('/checker', (req, res) => {
+    db.all(
+        `SELECT * FROM cities LIMIT 5`,
         (err, rows) => {
             if (rows.length > 0) {
                 res.send(rows);
@@ -145,7 +158,7 @@ app.get('/algorithm', (req, res) => {
         // console.log("Final ranked candidate cities:\n", rankedCandidates)
     }
 
-    let cityStmt = `select cid, city, lat, lng from cities where cid in (${candidateCityIDsString})`;
+    let cityStmt = `select cid, state, city, lat, lng from cities where cid in (${candidateCityIDsString})`;
 
     let flightStmt = `select cid, avg(price) as price from 
     (select a.src, a.dst, a.month, a.price as price, b.cid as cid from
@@ -180,6 +193,7 @@ app.get('/algorithm', (req, res) => {
         db.each(cityStmt, function (err, row) {
             if (err) callback('city', null);
             candidateFeatures[row.cid].city_name = row.city;
+            candidateFeatures[row.cid].state = row.state;
             candidateFeatures[row.cid].lat = row.lat;
             candidateFeatures[row.cid].lng = row.lng;
         });

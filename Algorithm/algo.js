@@ -79,11 +79,24 @@ function rankCandidateCities(
         "cuisine"
     ]
 
+    defaultFeature = {
+        "flight_price": userFeature["flight_price"]*10,
+        "temp": userFeature["temp"]*2,
+        "prcp": userFeature["prcp"]*10,
+        "crime": userFeature["crime"]*10,
+        "activities": 0,
+        "cuisine": 0,
+    }
+
+
     // first normalize each feature to be zero mean and unit variance
     for (let feature of featureList) {
         featureVals = []
         // iterate through each feature vector
         for (let k of Object.keys(featureMatrix)) {
+            if (featureMatrix[k][feature] === undefined) {
+                featureMatrix[k][feature] = defaultFeature[feature]
+            }
             featureVals.push(featureMatrix[k][feature])
         }
 
@@ -198,6 +211,10 @@ function ReturnDestinations(
         "g60763", // New York
         "g32655", // Los Angeles
         "g35805", // Chicago
+        "g28970", // Washington
+        "g51513", // Miami
+        "g60898", // Atlanta
+        "g60745", // Boston
     ];
 
     // Prepares sql statements for querying 6 different features of the candidate cities
@@ -365,25 +382,55 @@ function ReturnDestinations(
    TEST Run. callback will return ranked candidates
 
  */
+// ReturnDestinations(
+//     ["SFO", "SJC"], // userAirports
+//     [4, 5, 6],  // tripMonths
+//     10,  //tripLength
+//     3000, // budget
+//     20, //minTemp
+//     50, //maxTemp
+//     0.1, //minPrecip
+//     1.2, //maxPrecip
+//     0, //minCrime,
+//     600, //maxCrime
+//     ["Nature & Parks", "Concerts & Shows", "Museums"], //list of activities (value must be from category_activity column in city_activity table)
+//     ['Chinese', 'Italian', 'French'], // list of cuisines (value must be from cuisine column in restaurant_types table)
+//     {
+//         flight_price: 5,
+//         temp: 1,
+//         prcp: 1,
+//         crime: 5,
+//         activities: 4,
+//         cuisine: 3
+//     },  // user priority mapping between feature and priority value (between 0-10)
+//     function( err, rankedCandidates) {
+//         if (err) throw err;
+//
+//         // returned destination ranked by their matching scores
+//         console.log("Final ranked candidate cities:\n", rankedCandidates)
+//     }
+//
+// );
+
 ReturnDestinations(
     ["SFO", "SJC"], // userAirports
     [4, 5, 6],  // tripMonths
     10,  //tripLength
     3000, // budget
-    20, //minTemp
-    50, //maxTemp
+    50, //minTemp
+    70, //maxTemp
     0.1, //minPrecip
     1.2, //maxPrecip
     0, //minCrime,
-    600, //maxCrime
-    ["Nature & Parks", "Concerts & Shows", "Museums"], //list of activities (value must be from category_activity column in city_activity table)
+    50, //maxCrime
+    ["Museums"], //list of activities (value must be from category_activity column in city_activity table)
     ['Chinese', 'Italian', 'French'], // list of cuisines (value must be from cuisine column in restaurant_types table)
     {
-        flight_price: 5,
-        temp: 1,
+        flight_price: 1,
+        temp: 5,
         prcp: 1,
         crime: 5,
-        activities: 4,
+        activities: 5,
         cuisine: 3
     },  // user priority mapping between feature and priority value (between 0-10)
     function( err, rankedCandidates) {
@@ -394,6 +441,7 @@ ReturnDestinations(
     }
 
 );
+
 
 
 /* Sample output:

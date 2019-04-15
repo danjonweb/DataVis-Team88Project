@@ -376,7 +376,7 @@ export default {
   position: absolute;
   font-size: calc(2vmin + 10px);
   width: 90vw;
-  margin: 5px 10px;
+  margin: 5vh 10px;
 }
 
 @media (orientation: landscape), (min-width: 733px) {
@@ -409,7 +409,7 @@ export default {
     position: absolute;
     font-size: calc(2vmin + 10px);
     width: 60vw;
-    margin: 5px 10px;
+    margin: 5vh 10px;
   }
 }
 </style>

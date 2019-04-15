@@ -2,6 +2,9 @@
 
 ## Environment Setup
 You should have node.js and node package manager (npm) set up globally on your machine:
+- Node.js 10.12.0 EXACTLY is required to run this project
+- In order to download the database stored in this repository gitLFS must be installed on your machine
+- Ensure that you are not running an add blocker on your web browser as it can reject some of the API calls made by the developement version of this application
 
 #### node.js
 https://nodejs.org/en/

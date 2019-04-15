@@ -37,7 +37,7 @@ export async function ReturnDestinations(
     let userInputFeatures = response.data.userInputFeatures
     // console.log(response.data)
 
-    let rankedCandidates = rankCandidateCities(
+    let rankedCandidates = await rankCandidateCities(
         candidateFeatures,
         userInputFeatures,
         {

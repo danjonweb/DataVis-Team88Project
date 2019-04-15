@@ -229,7 +229,7 @@ export default {
       let count = 0;
 
       if (this.cities.length > 0) {
-        let maxScore = this.cities[0].matching_score;
+        // let maxScore = this.cities[0].matching_score;
         let copyCities = JSON.parse(JSON.stringify(this.cities));
 
         let radScale = window.innerWidth / 1900;
@@ -242,7 +242,7 @@ export default {
             goodLocation.matching_score =
               Math.round(goodLocation.matching_score * 100) / 100;
 
-            let radius = radScale * (90 - maxScore * 0.7);
+            let radius = radScale * 20;
 
             if (radius < 4) {
               radius = 4;

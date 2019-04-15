@@ -11,6 +11,28 @@ export default new Vuex.Store({
     databaseOnline: true,
     noResultsFound: false,
     showAbout: true,
+    legendLayout: [
+      {
+        name: "Rank #1",
+        color: "#08519c"
+      },
+      {
+        name: "Rank #2",
+        color: "#3182bd"
+      },
+      {
+        name: "Rank #3",
+        color: "#6baed6"
+      },
+      {
+        name: "Rank #4",
+        color: "#bdd7e7"
+      },
+      {
+        name: "Rank #5",
+        color: "#eff3ff"
+      }
+    ],
     userLatLon: [],
     numResults: 5,
     budget: 1200,

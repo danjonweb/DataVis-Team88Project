@@ -8,6 +8,13 @@
       Try reducing Trip Duration or Disable Ariline Travel
     </h1>
 
+    <div class="legend">
+      <div v-for="leg in legend" :key="leg.name" class="marker">
+        <div class="color-box" :style="'background-color:' + leg.color"></div>
+        <p class="marker-name">{{ leg.name }}</p>
+      </div>
+    </div>
+
     <svg class="fuller">
       <path fill="#888" :d="c()"></path>
       <path stroke="#4FCCEA" fill="none" :d="s()"></path>
@@ -60,19 +67,6 @@ export default {
       s: null,
       path: null,
       scaledUserLatLon: [],
-      dotColors: [
-        "#2EC631",
-        "#30C76D",
-        "#32C8A9",
-        "#34AEC9",
-        "#3575CA",
-        "#373DCC",
-        "#6D39CD",
-        "#A83BCE",
-        "#CF3DBC",
-        "#D03F84",
-        "#D1404D"
-      ],
       calculating: true
     };
   },
@@ -91,6 +85,9 @@ export default {
     this.calculateCandidates();
   },
   computed: {
+    legend() {
+      return this.$store.state.legendLayout;
+    },
     cities() {
       return this.$store.state.cities;
     },
@@ -245,7 +242,7 @@ export default {
             goodLocation.matching_score =
               Math.round(goodLocation.matching_score * 100) / 100;
 
-            let radius = radScale * (city.matching_score - maxScore * 0.7);
+            let radius = radScale * (90 - maxScore * 0.7);
 
             if (radius < 4) {
               radius = 4;
@@ -254,9 +251,9 @@ export default {
               goodLocation.radius = radius;
             }
 
-            goodLocation.color = this.dotColors[count];
+            goodLocation.color = this.legend[count].color;
             this.locations.push(goodLocation);
-            if (count < this.dotColors.length - 1) {
+            if (count < this.legend.length - 1) {
               count += 1;
             }
           } else {
@@ -325,21 +322,53 @@ export default {
   box-shadow: inset 10px -10px 8px -9px rgba(15, 12, 1, 0.226);
 }
 
+.legend {
+  display: flex;
+  position: absolute;
+  top: 9vh;
+  text-align: center;
+  left: 0.4vw;
+  width: 80vw;
+  margin: 0 0 0 10vw;
+  padding-left: 1vw;
+  border-radius: 1vmin;
+  background-color: rgb(136, 136, 136);
+}
+
+.marker {
+  display: flex;
+}
+
+.color-box {
+  height: 3vmin;
+  width: 3vmin;
+  margin: 0.5vmin 0 0.5vmin 0;
+  border: 1px solid black;
+  border-radius: 1.5vmin;
+}
+
+.marker-name {
+  padding: 0.5vmin 0 0.5vmin 0;
+  margin: 0 2vmin 0.5vmin 0.5vw;
+  font-size: calc(0.75vmin + 8px);
+  color: rgb(236, 236, 236);
+}
+
 .fuller {
   width: 100%;
-  height: 58vh;
+  height: 52vh;
 }
 
 .calculation {
   position: absolute;
   width: 75vw;
   font-size: calc(3vmin + 10px);
-  margin: 5px 0px;
+  margin: 5vh 0px;
 }
 
 .db-warning {
   position: absolute;
-  margin: 1vh 0 0 10vw;
+  margin: 5vh 0 0 10vw;
 }
 
 .low-budget-warning {
@@ -355,6 +384,19 @@ export default {
     width: 70vw;
     height: 92vh;
     min-width: 580px;
+  }
+
+  .legend {
+    display: flex;
+    position: absolute;
+    top: 9vh;
+    left: 0.4vw;
+    width: 65vw;
+    max-width: 565px;
+    padding-left: 2vw;
+    border-radius: 1vmin;
+    margin-left: unset;
+    background-color: rgb(136, 136, 136);
   }
 
   .fuller {

@@ -130,6 +130,10 @@ export default new Vuex.Store({
         link: 'https://www.youtube.com/watch?v=2WE4b2ZktP8&feature=youtu.be.'
       },
       {
+        name: 'Code README.txt',
+        link: 'https://docs.google.com/document/d/1dpYE4C2S5FtAHInTOjy2lWiNr9TnB88F8_NgHXDyOXo/edit?usp=sharing'
+      },
+      {
         name: 'Demo Video',
         link: 'https://www.youtube.com/watch?v=naa9-2eOJ8I&feature=youtu.be'
       },

@@ -129,19 +129,19 @@ export default new Vuex.Store({
       },
       {
         name: 'Proposal Video',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        link: 'https://www.youtube.com/watch?v=DAr3hqP1Hmg&feature=youtu.be'
       },
       {
-        name: 'Progress Report',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        name: 'Installation Video',
+        link: 'https://www.youtube.com/watch?v=2WE4b2ZktP8&feature=youtu.be.'
       },
       {
-        name: 'Final Poster',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        name: 'Demo Video',
+        link: 'https://www.youtube.com/watch?v=naa9-2eOJ8I&feature=youtu.be'
       },
       {
         name: 'Final Report',
-        link: 'https://docs.google.com/document/d/1TmquQqko-nLgNKJWSchAl_zO-SxK1tsIuStV22CSwu8/edit'
+        link: 'https://docs.google.com/document/d/16X_S9iEPRYSUOzEo--uOEHmNW1k0ccpwk7-7fK1TMx4/edit?usp=sharing'
       },
       {
         name: 'Code Repository',

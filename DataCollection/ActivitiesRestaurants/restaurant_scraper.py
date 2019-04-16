@@ -55,7 +55,7 @@ for row in result:
         
         page = 0
         for _ in range(pages):
-            print '%s - %d - %d' % (cid, page, pages)
+            print('%s - %d - %d' % (cid, page, pages))
             driver.get('%s&o=a%s' % (url, page))
             page += 30
             
@@ -76,18 +76,18 @@ for row in result:
                     else:
                         restaurants["prices"][price] = 1
             except:
-                print 'error on ' + ('%s&o=a%s' % (url, page))
+                print('error on ' + ('%s&o=a%s' % (url, page)))
                 continue
             
         
         result = json.dumps(restaurants) 
-        print result
-        print ''
+        print(result)
+        print('')
         conn.cursor().execute('UPDATE cities SET restaurants = ? WHERE cid = ?', (result, cid))
         conn.commit() 
     except:
-        print "Error: " + cid
-        print url
+        print("Error: " + cid)
+        print(url)
         traceback.print_exc()
     
     

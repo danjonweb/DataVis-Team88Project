@@ -1,5 +1,5 @@
-import urllib2
-from urllib2 import quote
+import urllib.request as urllib2
+from urllib.parse import quote
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -16,7 +16,7 @@ import math
 
 
 conn = sqlite3.connect('cityDB.sqlite')
-conn.text_factory = lambda x: unicode(x, 'utf-8', 'ignore')
+conn.text_factory = lambda x: str(x, 'utf-8', 'ignore')
 
 try:
     conn.cursor().execute('ALTER TABLE cities ADD COLUMN restaurants TEXT')

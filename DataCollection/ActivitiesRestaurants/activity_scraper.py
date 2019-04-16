@@ -1,5 +1,5 @@
-import urllib2
-from urllib2 import quote
+import urllib.request as urllib2
+from urllib.parse import quote
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException

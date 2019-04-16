@@ -80,8 +80,10 @@ export default new Vuex.Store({
     members: [
       {
         name: 'Fu, Yaoyao',
-        info: 'Scientist in onco-immunology and self-learner of programming language and algorithm \
-        first semester in the OMSCS program.'
+        info: 'Scientist in onco-immunology and self-learner of programming language and algorithm, \
+        first semester in the OMSCS program. Interested in visualizing complex biomedical data with \
+        powerful computer tools.'
+nterested in visualizing complex biomedical data with powerful computer tools.''
       },
       {
         name: 'Hermez, Celestin',

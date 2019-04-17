@@ -19,8 +19,7 @@ starttime = time.time()
 f = open('./cities.txt','r')
 cities = f.read()
 cities = cities.split('\n')
-cities = cities[:1679:-1]
-cities = [i for i in cities if not i in runsofar]
+
 # handle state name abbreviations
 state_name_lookup = pd.read_csv('./state-name-lookup.csv',names=['State','Abbr'])
 state_name_lookup = {row['Abbr']:row['State'] for i, row in state_name_lookup.iterrows()}

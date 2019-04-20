@@ -1,6 +1,5 @@
 # DataVis-Team88Project
-Source code repo for CSE6242OAN,O01 
-Data and Visual Analytics Team 88 Project
+Source code repo for Destination Exploration Travel Project
 
 ## Current Folders
 
